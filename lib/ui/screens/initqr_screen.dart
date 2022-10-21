@@ -170,36 +170,36 @@ class InitQrScreen extends StatelessWidget {
                     onPressed: (() {
                       switch (user.userType) {
                         case 106:
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     NormalQrScreen(
                                       user: user,
                                     )),
-                            ModalRoute.withName('/choose'),
+                          
                           );
                           break;
                         case 107:
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     NormalQrScreen(
                                       user: user,
                                     )),
-                            ModalRoute.withName('/choose'),
+                           
                           );
                           break;
                         default:
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     NormalQrScreen(
                                       user: user,
                                     )),
-                            ModalRoute.withName('/choose'),
+                           
                           );
                           break;
                       }

@@ -6,14 +6,18 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model.dart';
+import 'package:ticket_manager_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
 import 'package:ticket_manager_flutter_app/store/normalScan_store/normalScan_store.dart';
 import 'package:ticket_manager_flutter_app/store/visibility_store/visibility_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ticket_manager_flutter_app/utils/envirorment.dart';
 import 'package:ticket_manager_flutter_app/utils/extension.dart';
+import 'package:ticket_manager_flutter_app/utils/sound_helper.dart';
 import 'package:ticket_manager_flutter_app/utils/sound_play.dart';
+import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
 
 import '../../../model/user_model/user.dart';
+import '../../../network/visitors_service.dart';
 import '../../../provider/envirorment_provider.dart';
 import '../../../utils/scanner_animations.dart';
 
@@ -32,10 +36,14 @@ class _NormalQrScreenState extends State<NormalQrScreen>
   late TabController _controller;
   final scanStore = NormalScanStore();
   final visibilityStore = VisibilityStore();
+  final infoCurrentPeopleBoxStore = InfoCurrentPeopleBoxStore();
   late AnimationController _animationController;
   bool _animationStopped = false;
   int _selectedIndex = 0;
   String codiceScan = "";
+  String visitors = "0";
+
+  VisitorsService visitorsService = VisitorsService();
 
   @override
   void initState() {
@@ -86,7 +94,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                 labelColor: Colors.white,
                 tabs: tabBarWidget(),
                 indicatorWeight: 6,
-                indicatorColor: Colors.orange,
+                indicatorColor: ThemeHelper.primaryColor
               ),
               title: Text(
                 AppLocalizations.of(context).scanQrCode,
@@ -108,7 +116,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                         if (codiceScan != barcode.rawValue) {
                           visibilityStore.setSelected(false);
                           codiceScan = barcode.rawValue!;
-                          play(0);
+                          SoundHelper.play(0, player);
                           //cameraController.stop();
                           scanStore
                               .fetchScan(
@@ -118,7 +126,12 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                                   widget.user.courseId.toString(),
                                   _controller.index.toString(),
                                   envirormentProvider.envirormentState)
-                              .then((mValue) {});
+                              .then((mValue) {
+                                infoCurrentPeopleBoxStore.fetchVisitors(
+                                  widget.user.manifestationId.toString(),
+                                  widget.user.courseId.toString(),
+                                  envirormentProvider.envirormentState);
+                              });
                           debugPrint('Barcode found! $code');
                         }
                       }
@@ -128,13 +141,13 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                           visible: visibilityStore.isVisible,
                           child: ScannerAnimation(
                             _animationStopped,
-                            334,
+                            350,
                             animation: _animationController,
                           ),
                         ))),
                 Align(
                     alignment: Alignment.bottomCenter,
-                    child: Observer(builder: (_) => getScanBoxState())),
+                    child: Observer(builder: (_) => infoCurrentPeopleBox())),
                 Observer(
                   builder: (context) => getLayerScan(),
                 ),
@@ -151,32 +164,14 @@ class _NormalQrScreenState extends State<NormalQrScreen>
         )
       ];
 
-  void play(int value) async {
-    switch (value) {
-      case 0:
-        {
-          String alarmAudioPath = "beep.mp3";
-          await player.setSourceAsset(alarmAudioPath);
-          await player.play((AssetSource(alarmAudioPath)));
-          break;
-        }
-      case 1:
-        {
-          String alarmAudioPath = "ok.mp3";
-          await player.setSourceAsset(alarmAudioPath);
-          await player.play((AssetSource(alarmAudioPath)));
-          break;
-        }
-      case 2:
-        {
-          String alarmAudioPath = "error.wav";
-          await player.setSourceAsset(alarmAudioPath);
-          await player.play((AssetSource(alarmAudioPath)));
-          break;
-        }
-    }
+  
 
-    //player.play();
+  Future<int> getVisitors() {
+    Future<int> requestVisitors = visitorsService.requestVisitors(
+        widget.user.manifestationId.toString(),
+        widget.user.courseId!,
+        envirormentProvider.envirormentState);
+    return requestVisitors;
   }
 
   void animateScanAnimation(bool reverse) {
@@ -228,11 +223,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  scanStore.scanState.description!,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+                
                 Text(
                   scanStore.scanState.description!,
                   style: TextStyle(
@@ -265,11 +256,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  scanStore.scanState.description!,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+              
                 Text(
                   scanStore.scanState.description!,
                   style: TextStyle(
@@ -301,10 +288,31 @@ class _NormalQrScreenState extends State<NormalQrScreen>
     }
   }
 
+  Widget infoCurrentPeopleBox(){
+    return 
+         Container(
+        margin: EdgeInsets.all(36),
+        height: 60,
+        width: 220,
+        child: Center(
+          child: Text(
+            "${infoCurrentPeopleBoxStore.visitorState} " +
+                                      AppLocalizations.of(context)
+                                          .currentPeople,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(40))),
+      );
+  
+  }
+
   Widget getScanBoxState() {
     if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
         int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
-      play(1);
+      SoundHelper.play(1, player);
       return Container(
         margin: EdgeInsets.all(36),
         height: 60,
@@ -320,7 +328,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
             borderRadius: BorderRadius.all(Radius.circular(40))),
       );
     } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
-      play(2);
+      SoundHelper.play(2, player);
       return Container(
         margin: EdgeInsets.all(36),
         height: 60,
