@@ -90,15 +90,14 @@ class _NormalQrScreenState extends State<NormalQrScreen>
               ],
               backgroundColor: Colors.black,
               bottom: TabBar(
-                controller: _controller,
-                labelColor: Colors.white,
-                tabs: tabBarWidget(),
-                indicatorWeight: 6,
-                indicatorColor: ThemeHelper.primaryColor
-              ),
+                  controller: _controller,
+                  labelColor: Colors.white,
+                  tabs: tabBarWidget(),
+                  indicatorWeight: 6,
+                  indicatorColor: ThemeHelper.primaryColor),
               title: Text(
-                AppLocalizations.of(context).scanQrCode,
-                style: TextStyle(color: Colors.white),
+                widget.user.courseName!.substring(0, 60).capitalize() + "..",
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
             body: Stack(
@@ -127,11 +126,11 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                                   _controller.index.toString(),
                                   envirormentProvider.envirormentState)
                               .then((mValue) {
-                                infoCurrentPeopleBoxStore.fetchVisitors(
-                                  widget.user.manifestationId.toString(),
-                                  widget.user.courseId.toString(),
-                                  envirormentProvider.envirormentState);
-                              });
+                            infoCurrentPeopleBoxStore.fetchVisitors(
+                                widget.user.manifestationId.toString(),
+                                widget.user.courseId.toString(),
+                                envirormentProvider.envirormentState);
+                          });
                           debugPrint('Barcode found! $code');
                         }
                       }
@@ -163,8 +162,6 @@ class _NormalQrScreenState extends State<NormalQrScreen>
           text: 'Uscita',
         )
       ];
-
-  
 
   Future<int> getVisitors() {
     Future<int> requestVisitors = visitorsService.requestVisitors(
@@ -215,6 +212,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
   Widget getLayerScan() {
     if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
         int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
+      SoundHelper.play(3, player);
       return GestureDetector(
         child: Container(
             height: double.infinity,
@@ -223,7 +221,6 @@ class _NormalQrScreenState extends State<NormalQrScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                
                 Text(
                   scanStore.scanState.description!,
                   style: TextStyle(
@@ -248,6 +245,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
         },
       );
     } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
+      SoundHelper.play(2, player);
       return GestureDetector(
         child: Container(
             height: double.infinity,
@@ -256,7 +254,6 @@ class _NormalQrScreenState extends State<NormalQrScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-              
                 Text(
                   scanStore.scanState.description!,
                   style: TextStyle(
@@ -288,25 +285,22 @@ class _NormalQrScreenState extends State<NormalQrScreen>
     }
   }
 
-  Widget infoCurrentPeopleBox(){
-    return 
-         Container(
-        margin: EdgeInsets.all(36),
-        height: 60,
-        width: 220,
-        child: Center(
-          child: Text(
-            "${infoCurrentPeopleBoxStore.visitorState} " +
-                                      AppLocalizations.of(context)
-                                          .currentPeople,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
+  Widget infoCurrentPeopleBox() {
+    return Container(
+      margin: EdgeInsets.all(36),
+      height: 60,
+      width: 220,
+      child: Center(
+        child: Text(
+          "${infoCurrentPeopleBoxStore.visitorState} " +
+              AppLocalizations.of(context).currentPeople,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.all(Radius.circular(40))),
-      );
-  
+      ),
+      decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(40))),
+    );
   }
 
   Widget getScanBoxState() {

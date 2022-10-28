@@ -103,9 +103,8 @@ class InitQrScreen extends StatelessWidget {
                         );
                       }),
                       child: Container(
-                        margin: EdgeInsets.only(left: 10, right: 10),
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(8),
                           child: Icon(
                             Icons.change_circle,
                             color: Colors.white,
@@ -177,7 +176,6 @@ class InitQrScreen extends StatelessWidget {
                                     NormalQrScreen(
                                       user: user,
                                     )),
-                          
                           );
                           break;
                         case 107:
@@ -188,7 +186,6 @@ class InitQrScreen extends StatelessWidget {
                                     NormalQrScreen(
                                       user: user,
                                     )),
-                           
                           );
                           break;
                         default:
@@ -199,7 +196,6 @@ class InitQrScreen extends StatelessWidget {
                                     NormalQrScreen(
                                       user: user,
                                     )),
-                           
                           );
                           break;
                       }
