@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -36,7 +37,13 @@ class LoginScreen extends StatelessWidget {
           children: <Widget>[
             Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: themeChange.darkTheme
+                    ? Color(0xfff3f3f4)
+                    : Color.fromARGB(255, 1, 1, 20),
+              ),
             ),
             SizedBox(
               height: 10,
@@ -44,13 +51,23 @@ class LoginScreen extends StatelessWidget {
             if (isPassword)
               Observer(
                   builder: ((context) => TextField(
+                      style: TextStyle(
+                        color: themeChange.darkTheme
+                            ? Color(0xfff3f3f4)
+                            : Color.fromARGB(255, 1, 1, 20),
+                      ),
                       controller: controller,
                       obscureText: formStore.isVisibile,
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
-                            icon: Icon(formStore.isVisibile
-                                ? Icons.visibility
-                                : Icons.visibility_off),
+                            icon: Icon(
+                              formStore.isVisibile
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: themeChange.darkTheme
+                                  ? Color(0xfff3f3f4)
+                                  : Color.fromARGB(255, 1, 1, 20),
+                            ),
                             onPressed: () =>
                                 formStore.setVisibility(!formStore.isVisibile),
                           ),
@@ -121,7 +138,11 @@ class LoginScreen extends StatelessWidget {
               TextSpan(
                 text: 'Ticket',
                 style: TextStyle(
-                    color: Colors.black, fontSize: 30, fontFamily: 'Poppins'),
+                    color: themeChange.darkTheme
+                        ? CupertinoColors.white
+                        : CupertinoColors.label,
+                    fontSize: 30,
+                    fontFamily: 'Poppins'),
               ),
               TextSpan(
                 text: 'Manager',

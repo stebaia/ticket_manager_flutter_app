@@ -17,6 +17,7 @@ class ThemeHelper {
 
   static TextTheme myTextTheme(bool isDarkTheme, BuildContext context) {
     return TextTheme(
+      bodyText1: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
       headline1: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
       headline2: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
       bodyText2: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),

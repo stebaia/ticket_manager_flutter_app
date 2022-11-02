@@ -6,10 +6,14 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model.dart';
+import 'package:ticket_manager_flutter_app/model/history_model/history.dart';
+import 'package:ticket_manager_flutter_app/network/history_service.dart';
 import 'package:ticket_manager_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
 import 'package:ticket_manager_flutter_app/store/normalScan_store/normalScan_store.dart';
 import 'package:ticket_manager_flutter_app/store/visibility_store/visibility_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ticket_manager_flutter_app/ui/components/history_modal.dart';
+import 'package:ticket_manager_flutter_app/ui/screens/expositors_screen.dart';
 import 'package:ticket_manager_flutter_app/utils/envirorment.dart';
 import 'package:ticket_manager_flutter_app/utils/extension.dart';
 import 'package:ticket_manager_flutter_app/utils/sound_helper.dart';
@@ -41,9 +45,11 @@ class _NormalQrScreenState extends State<NormalQrScreen>
   bool _animationStopped = false;
   int _selectedIndex = 0;
   String codiceScan = "";
+  String lastBarcode = "";
   String visitors = "0";
 
   VisitorsService visitorsService = VisitorsService();
+  HistoryService historyService = HistoryService();
 
   @override
   void initState() {
@@ -115,22 +121,33 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                         if (codiceScan != barcode.rawValue) {
                           visibilityStore.setSelected(false);
                           codiceScan = barcode.rawValue!;
+                          lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
                           //cameraController.stop();
-                          scanStore
-                              .fetchScan(
+                          if (widget.user.userType == 106) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ExpositorsScreen(
+                                          user: widget.user,
+                                        )));
+                          } else {
+                            scanStore
+                                .fetchScan(
+                                    widget.user.manifestationId.toString(),
+                                    codiceScan,
+                                    widget.user.id.toString(),
+                                    widget.user.courseId.toString(),
+                                    _controller.index.toString(),
+                                    envirormentProvider.envirormentState)
+                                .then((mValue) {
+                              infoCurrentPeopleBoxStore.fetchVisitors(
                                   widget.user.manifestationId.toString(),
-                                  codiceScan,
-                                  widget.user.id.toString(),
                                   widget.user.courseId.toString(),
-                                  _controller.index.toString(),
-                                  envirormentProvider.envirormentState)
-                              .then((mValue) {
-                            infoCurrentPeopleBoxStore.fetchVisitors(
-                                widget.user.manifestationId.toString(),
-                                widget.user.courseId.toString(),
-                                envirormentProvider.envirormentState);
-                          });
+                                  envirormentProvider.envirormentState);
+                            });
+                          }
+
                           debugPrint('Barcode found! $code');
                         }
                       }
@@ -180,33 +197,34 @@ class _NormalQrScreenState extends State<NormalQrScreen>
   }
 
   Widget getHistory(BuildContext context) {
-    if (int.parse(scanStore.scanState.value!).isBetween(100, 199)) {
-      return Container();
-    } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
-      return IconButton(
-          onPressed: () {
-            showModalBottomSheet(
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                context: context,
-                builder: (BuildContext context) {
-                  return modalBottomSheet(context);
-                });
-          },
-          icon: Icon(
-            Icons.history_sharp,
-            color: Colors.white,
-          ));
-    } else {
-      return Container();
-    }
-  }
-
-  Widget modalBottomSheet(BuildContext context) {
-    return Container();
+    return IconButton(
+        onPressed: () {
+          showModalBottomSheet(
+              backgroundColor: Colors.transparent,
+              isScrollControlled: true,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            topRight: Radius.circular(25))),
+                    margin: EdgeInsets.only(top: 50),
+                    child: ComplexModal(
+                        idManifestazione: widget.user.manifestationId!,
+                        idCorso: widget.user.courseId!,
+                        barcode: lastBarcode));
+              });
+        },
+        icon: Icon(
+          Icons.history_sharp,
+          color: Colors.white,
+        ));
   }
 
   Widget getLayerScan() {

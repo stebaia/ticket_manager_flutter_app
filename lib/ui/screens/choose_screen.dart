@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -40,10 +41,21 @@ class ChooseScreen extends StatelessWidget {
     final envirormentProvider = Provider.of<EnvirormentProvider>(context);
 
     return Scaffold(
+        backgroundColor: themeChange.darkTheme
+            ? CupertinoColors.label
+            : CupertinoColors.white,
         appBar: AppBar(
+          backgroundColor: themeChange.darkTheme
+              ? CupertinoColors.label
+              : CupertinoColors.white,
           title: Text(
             user!.manifestationName!,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: themeChange.darkTheme
+                  ? CupertinoColors.white
+                  : CupertinoColors.black,
+            ),
           ),
         ),
         body: FutureBuilder(
@@ -98,7 +110,9 @@ class ChooseScreen extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context).selectCourse,
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: themeChange.darkTheme
+                                        ? CupertinoColors.white
+                                        : CupertinoColors.black,
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -159,7 +173,7 @@ class ChooseScreen extends StatelessWidget {
                                         dropDownStore.isSelected, context);
                                   },
                                   child: Text(dropDownStore.isSelected
-                                      ? AppLocalizations.of(context).go_to_gate
+                                      ? AppLocalizations.of(context).go_to_scan
                                       : AppLocalizations.of(context)
                                           .selectCourse),
                                 ),

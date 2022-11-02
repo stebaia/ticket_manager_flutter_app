@@ -17,7 +17,7 @@ class HistoryService {
           <soap12:Body>
             <History xmlns="http://tempuri.org/">
               <idmanifestazione>$idManifestazione</idmanifestazione>
-              <codice20>38374820499791005126</codice20>
+              <codice20>$barcode</codice20>
               <idcorso>$idCorso</idcorso>
             </History>
           </soap12:Body>
