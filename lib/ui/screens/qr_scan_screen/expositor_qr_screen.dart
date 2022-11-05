@@ -8,11 +8,13 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model.dart';
 import 'package:ticket_manager_flutter_app/model/history_model/history.dart';
 import 'package:ticket_manager_flutter_app/network/history_service.dart';
+import 'package:ticket_manager_flutter_app/store/enable_store/enable_store.dart';
 import 'package:ticket_manager_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
 import 'package:ticket_manager_flutter_app/store/normalScan_store/normalScan_store.dart';
 import 'package:ticket_manager_flutter_app/store/visibility_store/visibility_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ticket_manager_flutter_app/ui/components/history_modal.dart';
+import 'package:ticket_manager_flutter_app/ui/screens/expositor_detail_screen.dart';
 import 'package:ticket_manager_flutter_app/ui/screens/expositors_screen.dart';
 import 'package:ticket_manager_flutter_app/utils/envirorment.dart';
 import 'package:ticket_manager_flutter_app/utils/extension.dart';
@@ -34,10 +36,13 @@ class ExpositorQrScreen extends StatefulWidget {
 
 class _ExpositorQrScreenState extends State<ExpositorQrScreen>
     with TickerProviderStateMixin {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _textEditingController = TextEditingController();
   final player = AudioPlayer();
   EnvirormentProvider envirormentProvider = EnvirormentProvider();
   MobileScannerController cameraController = MobileScannerController();
-
+  EnableStore enableStore = EnableStore();
   final scanStore = NormalScanStore();
   final visibilityStore = VisibilityStore();
   final infoCurrentPeopleBoxStore = InfoCurrentPeopleBoxStore();
@@ -47,6 +52,8 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
   String codiceScan = "";
   String lastBarcode = "";
   String visitors = "0";
+  bool checkedValuePrivacy = false;
+  bool checkedValueCommerical = false;
 
   VisitorsService visitorsService = VisitorsService();
   HistoryService historyService = HistoryService();
@@ -103,7 +110,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                 MobileScanner(
                     allowDuplicates: true,
                     controller: cameraController,
-                    onDetect: (barcode, args) {
+                    onDetect: (barcode, args) async {
                       //cameraController.stop();
                       //cameraController.stop();
                       if (barcode.rawValue == null) {
@@ -111,18 +118,13 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                       } else {
                         final String code = barcode.rawValue!;
                         if (codiceScan != barcode.rawValue) {
-                          visibilityStore.setSelected(false);
+                          //visibilityStore.setSelected(false);
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
                           //cameraController.stop();
 
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ExpositorsScreen(
-                                        user: widget.user,
-                                      )));
+                          await showInformationDialog(context);
 
                           debugPrint('Barcode found! $code');
                         }
@@ -133,7 +135,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           visible: visibilityStore.isVisible,
                           child: ScannerAnimation(
                             _animationStopped,
-                            350,
+                            MediaQuery.of(context).size.width,
                             animation: _animationController,
                           ),
                         ))),
@@ -211,6 +213,76 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
           color: Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(40))),
     );
+  }
+
+  Future<void> showInformationDialog(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          bool isChecked = false;
+          bool isChecked2 = false;
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CheckboxListTile(
+                          title: Text(
+                            "Acconsenti al trattamento della privacy",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          value: isChecked,
+                          onChanged: (checked) {
+                            setState(() {
+                              isChecked = checked!;
+                              enableStore.setEnabled(checked);
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading),
+                      CheckboxListTile(
+                          title: Text(
+                            "Acconsenti all'utilizzo dei miei dati personali per scopi commerciali",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          value: isChecked2,
+                          onChanged: (checked) {
+                            setState(() {
+                              isChecked2 = checked!;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading),
+                    ],
+                  )),
+              title: Text('Privacy Policy'),
+              actions: <Widget>[
+                Observer(
+                    builder: ((context) => MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18)),
+                        color:
+                            enableStore.isEnabled ? Colors.green : Colors.grey,
+                        child: Text(
+                          'OK',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          if (enableStore.isEnabled) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) =>
+                                        ExpositorDetailScreen(
+                                          user: widget.user,
+                                          codice20: codiceScan,
+                                        ))));
+                          }
+                        })))
+              ],
+            );
+          });
+        });
   }
   /*Widget getLayerScan() {
     if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||

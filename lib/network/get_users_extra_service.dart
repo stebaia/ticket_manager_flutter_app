@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:http/http.dart' as http;
+import 'package:ticket_manager_flutter_app/model/expositor.dart';
+import 'package:ticket_manager_flutter_app/model/expositor_mapper/expositor_mapper.dart';
 import 'package:ticket_manager_flutter_app/model/expositor_model/expositor_model.dart';
 import 'package:ticket_manager_flutter_app/network/vivaticket_api.dart';
 import 'package:ticket_manager_flutter_app/utils/envirorment.dart';
@@ -11,7 +13,7 @@ import 'dart:convert';
 class GetUsersExtraService {
   final myTransformer = Xml2Json();
 
-  Future<List<Miatabella>> requestUsersExtra(
+  Future<List<ExpoisitorMapper>> requestUsersExtra(
       int idUtente, Envirorment envirorment) async {
     var envelope = '''
       <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
@@ -46,7 +48,7 @@ class GetUsersExtraService {
     print("DATAResult=" + response.body);
     GetUsersExtraResult getCorsiResult = corseResponse
         .soapEnvelope!.soapBody!.getUsersExtraResponse!.getUsersExtraResult!;
-    List<Miatabella> courseList = [];
+    List<ExpoisitorMapper> courseList = [];
     int index = 0;
 
     getCorsiResult.miatabella!.forEach((element) {

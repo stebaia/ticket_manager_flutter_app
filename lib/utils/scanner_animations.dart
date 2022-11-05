@@ -29,7 +29,6 @@ class ScannerAnimation extends AnimatedWidget {
 
     return new Positioned(
       bottom: scorePosition,
-      left: 16.0,
       child: new Opacity(
         opacity: (stopped) ? 0.0 : 1.0,
         child: Container(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../model/expositor_mapper/expositor_mapper.dart';
 import '../../model/expositor_model/expositor_model.dart';
 import '../../model/user_model/user.dart';
 import '../../network/get_users_extra_service.dart';
@@ -28,8 +29,8 @@ class _ExpositorListScreenState extends State<ExpositorsScreen> {
     final envirormentProvider = Provider.of<EnvirormentProvider>(context);
     User user = widget.user;
 
-    Future<List<Miatabella>> getExpositorList() {
-      Future<List<Miatabella>> requestExpositor = getUsersExtraService
+    Future<List<ExpoisitorMapper>> getExpositorList() {
+      Future<List<ExpoisitorMapper>> requestExpositor = getUsersExtraService
           .requestUsersExtra(user.id!, envirormentProvider.envirormentState);
       return requestExpositor;
     }
@@ -39,7 +40,8 @@ class _ExpositorListScreenState extends State<ExpositorsScreen> {
       future: getExpositorList(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
-          List<Miatabella> expositorList = snapshot.data as List<Miatabella>;
+          List<ExpoisitorMapper> expositorList =
+              snapshot.data as List<ExpoisitorMapper>;
           return ListView.builder(
               shrinkWrap: true,
               itemCount: null == expositorList ? 0 : expositorList.length,
