@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model.dart';
 import 'package:ticket_manager_flutter_app/model/history_model/history.dart';
 import 'package:ticket_manager_flutter_app/network/history_service.dart';
@@ -24,6 +25,7 @@ import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
 
 import '../../../model/user_model/user.dart';
 import '../../../network/visitors_service.dart';
+import '../../../provider/dark_theme_provider.dart';
 import '../../../provider/envirorment_provider.dart';
 import '../../../utils/scanner_animations.dart';
 
@@ -83,6 +85,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return DefaultTabController(
         length: lenghtTabBar(),
         child: Scaffold(
@@ -124,7 +127,14 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           SoundHelper.play(0, player);
                           //cameraController.stop();
 
-                          await showInformationDialog(context);
+                          await showInformationDialog(
+                              context,
+                              themeChange.darkTheme
+                                  ? Colors.black
+                                  : Colors.white,
+                              themeChange.darkTheme
+                                  ? Colors.white
+                                  : Colors.black);
 
                           debugPrint('Barcode found! $code');
                         }
@@ -215,7 +225,8 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
     );
   }
 
-  Future<void> showInformationDialog(BuildContext context) async {
+  Future<void> showInformationDialog(
+      BuildContext context, Color backgroundColor, Color anotherColor) async {
     return await showDialog(
         context: context,
         builder: (context) {
@@ -223,12 +234,15 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
           bool isChecked2 = false;
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              backgroundColor: backgroundColor,
               content: Form(
                   key: _formKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CheckboxListTile(
+                          side: BorderSide(color: anotherColor),
+                          checkColor: anotherColor,
                           title: Text(
                             "Acconsenti al trattamento della privacy",
                             style: TextStyle(fontSize: 12),
@@ -242,6 +256,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           },
                           controlAffinity: ListTileControlAffinity.leading),
                       CheckboxListTile(
+                          side: BorderSide(color: anotherColor),
                           title: Text(
                             "Acconsenti all'utilizzo dei miei dati personali per scopi commerciali",
                             style: TextStyle(fontSize: 12),
@@ -255,7 +270,10 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           controlAffinity: ListTileControlAffinity.leading),
                     ],
                   )),
-              title: Text('Privacy Policy'),
+              title: Text(
+                'Privacy Policy',
+                style: TextStyle(color: anotherColor),
+              ),
               actions: <Widget>[
                 Observer(
                     builder: ((context) => MaterialButton(
@@ -269,6 +287,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                         ),
                         onPressed: () {
                           if (enableStore.isEnabled) {
+                            Navigator.pop(context);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
