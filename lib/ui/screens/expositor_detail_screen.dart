@@ -387,9 +387,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                               minWidth: MediaQuery.of(context).size.width,
                               onPressed: () {
                                 requestSetUtenteApp(
-                                        expositorMapperData.idextra!,
+                                        user.id.toString(),
                                         user.manifestationId.toString(),
-                                        expositorMapperData.codice20!,
+                                        codice20.toString(),
                                         textEditingControllerNote.text,
                                         textEditingControllerCap.text,
                                         textEditingControllerEmail.text,
@@ -583,7 +583,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
         expositorId,
         manifestationId,
         codice20,
-        star.toString(),
+        (star + 1).toString(),
         base64Photo1,
         base64Photo2,
         base64Photo3,
@@ -596,6 +596,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
         cognome,
         telefono,
         ragioneSociale,
+        "1",
         envirorment);
     return setUser;
   }

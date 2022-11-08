@@ -61,7 +61,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> {
       });
       Future<Uint8List> valueInBytes = pickedFile.readAsBytes();
       valueInBytes.then((value) {
-        widget.onTakedPicture(""); //value[0].toString());
+        widget.onTakedPicture(value.toString()); //value[0].toString());
       }).onError((error, stackTrace) {
         print(error.toString());
       });
