@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/model/expositor_mapper/expositor_mapper.dart';
 import 'package:ticket_manager_flutter_app/model/user_model/user.dart';
 import 'package:ticket_manager_flutter_app/network/get_user_extra_by_20_service.dart';
+import 'package:ticket_manager_flutter_app/network/get_user_extra_service.dart';
 import 'package:ticket_manager_flutter_app/network/set_utente_app.dart';
 import 'package:ticket_manager_flutter_app/provider/envirorment_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -603,15 +604,12 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
 
   Future<ExpoisitorMapper> requestGetUtente() {
     if (idUtente != null) {
-      GetUserExtraByCode20Service getUserExtraByCode20Service =
-          new GetUserExtraByCode20Service();
-      Future<ExpoisitorMapper> resultGetUserExtraByCode20 =
-          getUserExtraByCode20Service.requestUserExtraBy20(
-              user.id!,
-              user.manifestationId!,
-              codice20!,
-              envirormentProvider.envirormentState);
-      return resultGetUserExtraByCode20;
+      GetUserExtraService getUserExtraByCode20Service =
+          new GetUserExtraService();
+      Future<ExpoisitorMapper> resultGetUserExtra =
+          getUserExtraByCode20Service.requestUserExtra(
+              user.id!, idUtente!, envirormentProvider.envirormentState);
+      return resultGetUserExtra;
     } else {
       GetUserExtraByCode20Service getUserExtraByCode20Service =
           new GetUserExtraByCode20Service();

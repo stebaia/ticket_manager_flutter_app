@@ -114,7 +114,11 @@ class ProvinceUtils {
   ];
 
   static Province getProvinceFromInitials(String initials) {
-    return provinces.firstWhere((element) => element.cod == initials);
+    if (initials == "NULL") {
+      return provinces.firstWhere((element) => element.cod == "RN");
+    } else {
+      return provinces.firstWhere((element) => element.cod == initials);
+    }
   }
 
   static String getInitialsFromProvince(String name) {

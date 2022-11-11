@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../model/nation.dart';
 
 class NationsUtils {
@@ -190,7 +192,11 @@ class NationsUtils {
   ];
 
   static Nation getNationFromInitials(String initials) {
-    return nations.firstWhere((element) => element.cod == initials);
+    if (initials == "NULL") {
+      return nations.firstWhere((element) => element.cod == "IT");
+    } else {
+      return nations.firstWhere((element) => element.cod == initials);
+    }
   }
 
   static String getInitialsFromNation(String name) {

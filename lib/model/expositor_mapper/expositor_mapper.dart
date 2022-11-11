@@ -19,6 +19,7 @@ class ExpoisitorMapper {
   String? foto1;
   String? foto2;
   String? foto3;
+  String? privacyCommerciale;
 
   ExpoisitorMapper(
       {this.idextra,
@@ -40,7 +41,8 @@ class ExpoisitorMapper {
       this.valore,
       this.foto1,
       this.foto2,
-      this.foto3});
+      this.foto3,
+      this.privacyCommerciale});
 
   ExpoisitorMapper.fromJson(Map<String, dynamic> json) {
     idextra = json['Idextra'];
@@ -63,6 +65,7 @@ class ExpoisitorMapper {
     foto1 = json['foto1'];
     foto2 = json['foto2'];
     foto3 = json['foto3'];
+    privacyCommerciale = json['privacyCommerciale'];
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +90,7 @@ class ExpoisitorMapper {
     data['foto1'] = this.foto1;
     data['foto2'] = this.foto2;
     data['foto3'] = this.foto3;
+    data['privacyCommerciale'] = this.privacyCommerciale;
     return data;
   }
 }
