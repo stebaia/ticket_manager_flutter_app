@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:ticket_manager_flutter_app/model/scan_offline.dart';
 import 'package:ticket_manager_flutter_app/model/user_model/user.dart';
 
 class DatabaseHelper {
@@ -34,6 +35,16 @@ class DatabaseHelper {
           manifestationName TEXT,
           courseName TEXT,
           courseId INTEGER
+      )
+      ''');
+    await db.execute('''
+      CREATE TABLE offlineScan(
+          idManifestazione INTEGER,
+          codice TEXT,
+          idUtilizzatore TEXT,
+          dataOra INTEGER,
+          idCorso INTEGER,
+          ckExit TEXT
       )
       ''');
   }
@@ -70,5 +81,26 @@ class DatabaseHelper {
   Future<int> add(User user) async {
     Database db = await instance.database;
     return await db.insert('users', user.toMap());
+  }
+
+  Future<List<OfflineScan>> getOfflineScan() async {
+    Database database = await instance.database;
+    var getOfflineScan =
+        await database.query('offlineScan', orderBy: 'idManifestazione');
+    List<OfflineScan> listOfflineScan = getOfflineScan.isNotEmpty
+        ? getOfflineScan.map((e) => OfflineScan.fromMap(e)).toList()
+        : [];
+    return listOfflineScan;
+  }
+
+  Future<int> addOfflineScan(OfflineScan offlineScan) async {
+    Database database = await instance.database;
+    return await database.insert('offlineScan', offlineScan.toMap());
+  }
+
+  Future<int> deleteOfflineScan(int id) async {
+    Database database = await instance.database;
+    return await database
+        .delete('offlineScan', where: 'idManifestazione = ?', whereArgs: [id]);
   }
 }

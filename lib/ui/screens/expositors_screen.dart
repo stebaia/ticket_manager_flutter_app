@@ -38,6 +38,9 @@ class _ExpositorListScreenState extends State<ExpositorsScreen> {
     }
 
     return Scaffold(
+        backgroundColor: themeChange.darkTheme
+            ? CupertinoColors.label
+            : CupertinoColors.white,
         floatingActionButton: FloatingActionButton(
           child: Icon(CupertinoIcons.dot_radiowaves_left_right),
           onPressed: (() {
