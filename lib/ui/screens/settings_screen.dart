@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ticket_manager_flutter_app/network/logout_service.dart';
+import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
 
 import '../../db/database_helper.dart';
 import '../../model/user_model/user.dart';
@@ -29,6 +30,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     final envirormentTheme = Provider.of<EnvirormentProvider>(context);
+    final offlineMode = Provider.of<OfflineModeProvider>(context);
     return SingleChildScrollView(
         child: Column(children: [
       Container(
@@ -137,8 +139,26 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                 ),
                 Spacer(),
                 CupertinoSwitch(
-                  value: false,
-                  onChanged: (value) {},
+                  value: offlineMode.getOfflineMode,
+                  onChanged: (value) async {
+                    if (value) {
+                      await DatabaseHelper.instance
+                          .getOfflineScan()
+                          .then((value) {
+                        if (value.isNotEmpty) {
+                          showInformationDialog(
+                              context,
+                              themeChange.darkTheme
+                                  ? Colors.black
+                                  : Colors.white,
+                              themeChange.darkTheme
+                                  ? Colors.white
+                                  : Colors.black);
+                        }
+                      });
+                    }
+                    offlineMode.offlineMode = value;
+                  },
                 ),
               ],
             ),
@@ -284,6 +304,22 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                 'envirorment': envirormentTheme.envirormentState.toString()
               })),
     ]));
+  }
+
+  Future<void> showInformationDialog(
+      BuildContext context, Color backgroundColor, Color anotherColor) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+                backgroundColor: backgroundColor,
+                content: Container(
+                  height: 300,
+                  width: 300,
+                ));
+          });
+        });
   }
 
   static Future<int> requestLogout(int id, Envirorment envirorment) {

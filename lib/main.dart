@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/db/database_helper.dart';
 import 'package:ticket_manager_flutter_app/provider/dark_theme_provider.dart';
 import 'package:ticket_manager_flutter_app/provider/envirorment_provider.dart';
+import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
 import 'package:ticket_manager_flutter_app/ui/screens/choose_screen.dart';
 import 'package:ticket_manager_flutter_app/ui/screens/home_screen.dart';
 import 'package:ticket_manager_flutter_app/ui/screens/login_screen.dart';
@@ -46,6 +47,7 @@ class MyAppPage extends StatefulWidget {
 class _MyAppState extends State<MyAppPage> {
   DarkThemeProvider themeProvider = new DarkThemeProvider();
   EnvirormentProvider envirormentProvider = new EnvirormentProvider();
+  OfflineModeProvider offlineModeProvider = new OfflineModeProvider();
   void getCurrentAppTheme() async {
     themeProvider.darkTheme =
         await themeProvider.darkThemePreferences.getTheme();
@@ -56,13 +58,20 @@ class _MyAppState extends State<MyAppPage> {
         await envirormentProvider.envirormentPreferences.getEnvirorment();
   }
 
+  void getOfflineMode() async {
+    offlineModeProvider.offlineMode =
+        await offlineModeProvider.envirormentPreferences.getMode();
+  }
+
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<DarkThemeProvider>(
               create: (_) => themeProvider),
           ChangeNotifierProvider<EnvirormentProvider>(
-              create: (_) => envirormentProvider)
+              create: (_) => envirormentProvider),
+          ChangeNotifierProvider<OfflineModeProvider>(
+              create: (_) => offlineModeProvider)
         ],
         child: MaterialApp(
           localizationsDelegates: [
