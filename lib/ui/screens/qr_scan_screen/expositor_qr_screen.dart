@@ -11,6 +11,7 @@ import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model
 import 'package:ticket_manager_flutter_app/model/history_model/history.dart';
 import 'package:ticket_manager_flutter_app/model/scan_offline.dart';
 import 'package:ticket_manager_flutter_app/network/history_service.dart';
+import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
 import 'package:ticket_manager_flutter_app/store/enable_store/enable_store.dart';
 import 'package:ticket_manager_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
 import 'package:ticket_manager_flutter_app/store/normalScan_store/normalScan_store.dart';
@@ -88,6 +89,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
+    final offlineMode = Provider.of<OfflineModeProvider>(context);
     return DefaultTabController(
         length: lenghtTabBar(),
         child: Scaffold(
@@ -123,30 +125,31 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                       } else {
                         final String code = barcode.rawValue!;
                         if (codiceScan != barcode.rawValue) {
-                          //visibilityStore.setSelected(false);
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
+                          if (offlineMode.getOfflineMode) {
+                            await DatabaseHelper.instance.addOfflineScan(
+                                OfflineScan(
+                                    idManifestazione:
+                                        widget.user.manifestationId!,
+                                    codice: codiceScan,
+                                    dataOra: DateTime.now().toString(),
+                                    idCorso: widget.user.courseId!,
+                                    idUtilizzatore: widget.user.id.toString()));
+                          } else {
+                            await showInformationDialog(
+                                context,
+                                themeChange.darkTheme
+                                    ? Colors.black
+                                    : Colors.white,
+                                themeChange.darkTheme
+                                    ? Colors.white
+                                    : Colors.black);
+                          }
+                          //visibilityStore.setSelected(false);
+
                           //cameraController.stop();
-                          await DatabaseHelper.instance
-                              .addOfflineScan(OfflineScan(
-                                  idManifestazione:
-                                      widget.user.manifestationId!,
-                                  codice: codiceScan,
-                                  ckExit: "1",
-                                  dataOra: DateTime.now().toString(),
-                                  idCorso: widget.user.courseId!,
-                                  idUtilizzatore: widget.user.id.toString()))
-                              .then((value) =>
-                                  DatabaseHelper.instance.getOfflineScan());
-                          await showInformationDialog(
-                              context,
-                              themeChange.darkTheme
-                                  ? Colors.black
-                                  : Colors.white,
-                              themeChange.darkTheme
-                                  ? Colors.white
-                                  : Colors.black);
 
                           debugPrint('Barcode found! $code');
                         }
