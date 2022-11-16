@@ -134,6 +134,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                     idManifestazione:
                                         widget.user.manifestationId!,
                                     codice: codiceScan,
+                                    ckExit: "1",
                                     dataOra: DateTime.now().toString(),
                                     idCorso: widget.user.courseId!,
                                     idUtilizzatore: widget.user.id.toString()));
