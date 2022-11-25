@@ -89,7 +89,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    final offlineMode = Provider.of<OfflineModeProvider>(context);
+
     return DefaultTabController(
         length: lenghtTabBar(),
         child: Scaffold(
@@ -128,25 +128,15 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
-                          if (offlineMode.getOfflineMode) {
-                            await DatabaseHelper.instance.addOfflineScan(
-                                OfflineScan(
-                                    idManifestazione:
-                                        widget.user.manifestationId!,
-                                    codice: codiceScan,
-                                    dataOra: DateTime.now().toString(),
-                                    idCorso: widget.user.courseId!,
-                                    idUtilizzatore: widget.user.id.toString()));
-                          } else {
-                            await showInformationDialog(
-                                context,
-                                themeChange.darkTheme
-                                    ? Colors.black
-                                    : Colors.white,
-                                themeChange.darkTheme
-                                    ? Colors.white
-                                    : Colors.black);
-                          }
+                          await showInformationDialog(
+                              context,
+                              themeChange.darkTheme
+                                  ? Colors.black
+                                  : Colors.white,
+                              themeChange.darkTheme
+                                  ? Colors.white
+                                  : Colors.black);
+
                           //visibilityStore.setSelected(false);
 
                           //cameraController.stop();

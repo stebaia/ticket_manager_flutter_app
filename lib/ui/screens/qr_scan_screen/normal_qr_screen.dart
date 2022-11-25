@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model.dart';
 import 'package:ticket_manager_flutter_app/model/history_model/history.dart';
 import 'package:ticket_manager_flutter_app/network/history_service.dart';
@@ -20,9 +21,12 @@ import 'package:ticket_manager_flutter_app/utils/sound_helper.dart';
 import 'package:ticket_manager_flutter_app/utils/sound_play.dart';
 import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
 
+import '../../../db/database_helper.dart';
+import '../../../model/scan_offline.dart';
 import '../../../model/user_model/user.dart';
 import '../../../network/visitors_service.dart';
 import '../../../provider/envirorment_provider.dart';
+import '../../../provider/offline_mode_provider.dart';
 import '../../../utils/scanner_animations.dart';
 
 class NormalQrScreen extends StatefulWidget {
@@ -78,6 +82,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
 
   @override
   Widget build(BuildContext context) {
+    final offlineMode = Provider.of<OfflineModeProvider>(context);
     return DefaultTabController(
         length: lenghtTabBar(),
         child: Scaffold(
@@ -111,7 +116,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                 MobileScanner(
                     allowDuplicates: true,
                     controller: cameraController,
-                    onDetect: (barcode, args) {
+                    onDetect: (barcode, args) async {
                       //cameraController.stop();
                       //cameraController.stop();
                       if (barcode.rawValue == null) {
@@ -124,13 +129,17 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
                           //cameraController.stop();
-                          if (widget.user.userType == 106) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ExpositorsScreen(
-                                          user: widget.user,
-                                        )));
+                          if (offlineMode.getOfflineMode) {
+                            //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
+                            await DatabaseHelper.instance
+                                .addOfflineScan(OfflineScan(
+                              idManifestazione: widget.user.manifestationId!,
+                              codice: codiceScan,
+                              dataOra: DateTime.now().toString(),
+                              idCorso: widget.user.courseId!,
+                              idUtilizzatore: widget.user.id.toString(),
+                              ckExit: _controller.index.toString(),
+                            ));
                           } else {
                             scanStore
                                 .fetchScan(
