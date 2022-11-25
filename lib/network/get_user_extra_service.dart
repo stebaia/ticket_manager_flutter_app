@@ -15,7 +15,7 @@ class GetUserExtraService {
   final myTransformer = Xml2Json();
 
   Future<ExpoisitorMapper> requestUserExtra(
-      int idUtente, int idUtilizzatore, Envirorment envirorment) async {
+      int idUtilizzatore, int idUtente, Envirorment envirorment) async {
     var envelope = '''
       <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
         <soap12:Body>
