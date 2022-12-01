@@ -89,9 +89,9 @@ class GetUsersExtraResult {
     if (json['Miatabella'] != null) {
       miatabella = <ExpoisitorMapper>[];
       try {
-        json['Miatabella'].foreach((v) {
-          miatabella!.add(new ExpoisitorMapper.fromJson(v));
-        });
+        for (var expositor in json['Miatabella']) {
+          miatabella!.add(new ExpoisitorMapper.fromJson(expositor));
+        }
       } catch (e) {
         miatabella!.add(new ExpoisitorMapper.fromJson(json['Miatabella']));
       }

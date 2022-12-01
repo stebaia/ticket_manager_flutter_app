@@ -19,7 +19,7 @@ class GetUsersExtraService {
       <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
         <soap12:Body>
           <GetUsersExtra xmlns="http://tempuri.org/">            
-            <idutente>$idUtente</idutente>
+            <idutilizzatore>$idUtente</idutilizzatore>
           </GetUsersExtra>
         </soap12:Body>
       </soap12:Envelope>
