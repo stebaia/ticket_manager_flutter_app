@@ -100,7 +100,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         expositorMapperData.email!;
                     textEditingControllerPhone.text =
                         expositorMapperData.telefono!;
-
+                    textEditingControllerCap.text = expositorMapperData.cap!;
                     selectedValue = NationsUtils.getNationFromInitials(
                             expositorMapperData.siglanazione!)
                         .name;
@@ -598,6 +598,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
         telefono,
         ragioneSociale,
         "1",
+        idUtente != null ? idUtente.toString() : "",
         envirorment);
     return setUser;
   }

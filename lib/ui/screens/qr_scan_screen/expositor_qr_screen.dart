@@ -89,7 +89,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    final offlineMode = Provider.of<OfflineModeProvider>(context);
+
     return DefaultTabController(
         length: lenghtTabBar(),
         child: Scaffold(
@@ -128,6 +128,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
+<<<<<<< HEAD
                           if (offlineMode.getOfflineMode) {
                             await DatabaseHelper.instance.addOfflineScan(
                                 OfflineScan(
@@ -148,6 +149,17 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                     ? Colors.white
                                     : Colors.black);
                           }
+=======
+                          await showInformationDialog(
+                              context,
+                              themeChange.darkTheme
+                                  ? Colors.black
+                                  : Colors.white,
+                              themeChange.darkTheme
+                                  ? Colors.white
+                                  : Colors.black);
+
+>>>>>>> 2f914407f9349de6a9db7b680dca24a45f9c9e3a
                           //visibilityStore.setSelected(false);
 
                           //cameraController.stop();
