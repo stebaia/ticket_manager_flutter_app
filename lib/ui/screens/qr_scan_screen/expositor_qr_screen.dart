@@ -128,28 +128,6 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
-<<<<<<< HEAD
-                          if (offlineMode.getOfflineMode) {
-                            await DatabaseHelper.instance.addOfflineScan(
-                                OfflineScan(
-                                    idManifestazione:
-                                        widget.user.manifestationId!,
-                                    codice: codiceScan,
-                                    ckExit: "1",
-                                    dataOra: DateTime.now().toString(),
-                                    idCorso: widget.user.courseId!,
-                                    idUtilizzatore: widget.user.id.toString()));
-                          } else {
-                            await showInformationDialog(
-                                context,
-                                themeChange.darkTheme
-                                    ? Colors.black
-                                    : Colors.white,
-                                themeChange.darkTheme
-                                    ? Colors.white
-                                    : Colors.black);
-                          }
-=======
                           await showInformationDialog(
                               context,
                               themeChange.darkTheme
@@ -159,7 +137,6 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                   ? Colors.white
                                   : Colors.black);
 
->>>>>>> 2f914407f9349de6a9db7b680dca24a45f9c9e3a
                           //visibilityStore.setSelected(false);
 
                           //cameraController.stop();

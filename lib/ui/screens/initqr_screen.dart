@@ -61,31 +61,38 @@ class InitQrScreen extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white),
                       ),
-                      Container(
-                        width: 250,
-                        child: Text(
-                          user.courseName!.substring(0, 60).capitalize() + "..",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      ),
-                      FutureBuilder(
-                          future: getVisitors(),
-                          builder: ((context, snapshot) {
-                            if (snapshot.hasData) {
-                              visitors = snapshot.data as int;
-                              return Text(
-                                "$visitors " +
-                                    AppLocalizations.of(context).currentPeople,
+                      user.courseName != null
+                          ? Container(
+                              width: 250,
+                              child: Text(
+                                user.courseName!.substring(0, 60).capitalize() +
+                                    "..",
                                 style: TextStyle(
-                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }))
+                              ),
+                            )
+                          : Container(),
+                      user.courseName != null
+                          ? FutureBuilder(
+                              future: getVisitors(),
+                              builder: ((context, snapshot) {
+                                if (snapshot.hasData) {
+                                  visitors = snapshot.data as int;
+                                  return Text(
+                                    "$visitors " +
+                                        AppLocalizations.of(context)
+                                            .currentPeople,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }))
+                          : Container()
                     ],
                   ),
                   GestureDetector(

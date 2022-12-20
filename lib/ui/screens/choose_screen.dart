@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
@@ -184,9 +185,46 @@ class ChooseScreen extends StatelessWidget {
                   ],
                 );
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Nessun risultato trovato'),
-                );
+                return Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Text(
+                              'Nessun risultato trovato',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextButton(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.black,
+                              ),
+                              onPressed: () {
+                                User updateUser = user!;
+
+                                DatabaseHelper.instance.update(updateUser).then(
+                                    (value) => Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  HomePageScreen(
+                                                    user: user!,
+                                                  )),
+                                          ModalRoute.withName('/home'),
+                                        ));
+                              },
+                              child: Text('Procedi comunque'))
+                        ]));
               } else {
                 return Center(
                   child: CircularProgressIndicator(),

@@ -44,13 +44,12 @@ class _SettingUserScreenState extends State<SettingsScreen> {
               height: 20,
             ),
             Text(
-              'VIVA2021',
+              widget.user.email,
               style: TextStyle(
                   color: ThemeHelper.primaryColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w700),
             ),
-            Text('test@vivaticket.com')
           ],
         ),
       ),
@@ -65,46 +64,6 @@ class _SettingUserScreenState extends State<SettingsScreen> {
               letterSpacing: 1.6,
               fontSize: 12,
               fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-      ),
-      Container(
-        height: 50,
-        color: themeChange.darkTheme
-            ? CupertinoColors.label
-            : CupertinoColors.white,
-        child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                Icon(
-                  CupertinoIcons.person,
-                  color: themeChange.darkTheme
-                      ? CupertinoColors.white
-                      : CupertinoColors.label,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Modifica utente',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color:
-                          themeChange.darkTheme ? Colors.white : Colors.black),
-                ),
-                Spacer(),
-                Icon(
-                  CupertinoIcons.chevron_forward,
-                  color: themeChange.darkTheme
-                      ? CupertinoColors.white
-                      : CupertinoColors.label,
-                ),
-              ],
             ),
           ),
         ),
