@@ -192,38 +192,31 @@ class ChooseScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Text(
-                              'Nessun risultato trovato',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextButton(
-                              style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                backgroundColor: Colors.black,
-                              ),
-                              onPressed: () {
-                                User updateUser = user!;
-
-                                DatabaseHelper.instance.update(updateUser).then(
-                                    (value) => Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  HomePageScreen(
-                                                    user: user!,
-                                                  )),
-                                          ModalRoute.withName('/home'),
-                                        ));
-                              },
-                              child: Text('Procedi comunque'))
+                              height: 50,
+                              width: 300,
+                              child: TextButton.icon(
+                                  icon: Icon(Icons.qr_code),
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.green,
+                                  ),
+                                  onPressed: () {
+                                    User updateUser = user!;
+                                    DatabaseHelper.instance
+                                        .update(updateUser)
+                                        .then((value) =>
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          HomePageScreen(
+                                                            user: user!,
+                                                          )),
+                                              ModalRoute.withName('/home'),
+                                            ));
+                                  },
+                                  label: Text('Controllo accessi')))
                         ]));
               } else {
                 return Center(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/db/database_helper.dart';
 import 'package:ticket_manager_flutter_app/provider/dark_theme_provider.dart';
@@ -9,12 +10,16 @@ import 'package:ticket_manager_flutter_app/ui/screens/home_screen.dart';
 import 'package:ticket_manager_flutter_app/ui/screens/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
 
 import 'model/user_model/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterNativeSplash.removeAfter(initialization);
+
   var initialRoute = '/';
 
   var isUserLogged = await DatabaseHelper.instance.isUserLogged();
@@ -31,6 +36,10 @@ void main() async {
       initialRoute: initialRoute,
     ));
   }
+}
+
+Future initialization(BuildContext? context) async {
+  await Future.delayed(const Duration(seconds: 2));
 }
 
 class MyAppPage extends StatefulWidget {

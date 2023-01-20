@@ -55,6 +55,7 @@ dependencies:
   csv: ^5.0.1
   external_path: ^1.0.3
   flutter_share: ^2.0.0
+  flutter_native_splash: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,10 @@ dev_dependencies:
   mobx_codegen: ^2.0.7
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_native_splash:
+  color: "#4fb286"
+  image: assets/iconaapp.png
 
 # The following section is specific to Flutter packages.
 flutter:
