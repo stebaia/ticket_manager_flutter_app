@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/model/user_model/user.dart';
 import 'package:ticket_manager_flutter_app/network/visitors_service.dart';
 import 'package:ticket_manager_flutter_app/provider/envirorment_provider.dart';
@@ -12,6 +13,7 @@ import 'package:ticket_manager_flutter_app/ui/screens/qr_scan_screen/normal_qr_s
 import 'package:ticket_manager_flutter_app/utils/custom_colors.dart';
 import 'package:ticket_manager_flutter_app/utils/extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../provider/dark_theme_provider.dart';
 import '../../store/dropdown_store/dropdown_store.dart';
 import '../../utils/theme/custom_theme.dart';
 
@@ -32,6 +34,7 @@ class InitQrScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Center(
         child: Container(
       margin: EdgeInsets.only(left: 20, right: 20),
@@ -128,10 +131,15 @@ class InitQrScreen extends StatelessWidget {
           ),
           Text(
             AppLocalizations.of(context).scanQrCode,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: themeChange.darkTheme ? Colors.white : Colors.black),
           ),
           Text(
             AppLocalizations.of(context).tap_the_button,
+            style: TextStyle(
+                color: themeChange.darkTheme ? Colors.white : Colors.black),
             textAlign: TextAlign.center,
           ),
           Padding(

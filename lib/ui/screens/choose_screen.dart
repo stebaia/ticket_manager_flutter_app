@@ -136,7 +136,7 @@ class ChooseScreen extends StatelessWidget {
                                       child: DropdownButton(
                                           isExpanded: true,
                                           hint: Text(
-                                            "Seleziona un corso",
+                                            "Seleziona un evento",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold),
