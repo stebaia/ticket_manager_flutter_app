@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <application
    android:requestLegacyExternalStorage="true"
-        android:label="ticket_manager_flutter_app"
+        android:label="Ticket Manager"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <provider

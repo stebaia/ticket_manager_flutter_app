@@ -110,7 +110,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                 widget.user.courseName != null
                     ? widget.user.courseName!.substring(0, 60).capitalize() +
                         ".."
-                    : "Nessun corso presente",
+                    : AppLocalizations.of(context).scanQrCode,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
@@ -214,7 +214,9 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                         ))),
                 Align(
                     alignment: Alignment.bottomCenter,
-                    child: Observer(builder: (_) => infoCurrentPeopleBox())),
+                    child: Observer(
+                        builder: (_) =>
+                            infoCurrentPeopleBox(offlineMode.getOfflineMode))),
                 Observer(
                   builder: (context) => getLayerScan(),
                 ),
@@ -356,18 +358,32 @@ class _NormalQrScreenState extends State<NormalQrScreen>
     }
   }
 
-  Widget infoCurrentPeopleBox() {
+  Widget infoCurrentPeopleBox(bool offlineMode) {
     return Container(
       margin: EdgeInsets.all(36),
       height: 60,
       width: 220,
       child: Center(
-        child: Text(
-          "${infoCurrentPeopleBoxStore.visitorState} " +
-              AppLocalizations.of(context).currentPeople,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "${infoCurrentPeopleBoxStore.visitorState} " +
+                AppLocalizations.of(context).currentPeople,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 12,
+          ),
+          offlineMode == true
+              ? Icon(
+                  Icons.wifi_off,
+                  color: Colors.white,
+                )
+              : Container()
+        ],
+      )),
       decoration: BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(40))),
