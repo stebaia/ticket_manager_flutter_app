@@ -54,7 +54,7 @@
     "go_to_event" : "Vai agli eventi",
     "select_gate" : "Seleziona un gate",
     "select_event" : "Seleziona un evento",
-    "go_to_scan" : "Vai alla scannerizzaione",
+    "go_to_scan" : "Vai alla scansione",
     "change_choose" : "Vuoi cambiare le tue scelte?",
     "setting" : "Impostazioni",
     "events" : "Eventi",
@@ -62,7 +62,7 @@
     "gates" : "Gates",
     "scan_exclamative" : "Scan!",
     "scan_qr" : "Scan QR code",
-    "tap_the_button" : "Clicca il bottone sottostante per iniziare la scannerizzaione",
+    "tap_the_button" : "Clicca il bottone sottostante per iniziare la scansione",
     "history_check" : "Vuoi riguardare le scannerizzazioni?",
     "logout": "Logout"
 

@@ -108,7 +108,10 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
               ],
               backgroundColor: Colors.black,
               title: Text(
-                widget.user.courseName!.substring(0, 60).capitalize() + "..",
+                widget.user.courseName!.length > 60
+                    ? widget.user.courseName!.substring(0, 60).capitalize() +
+                        ".."
+                    : widget.user.courseName!.capitalize(),
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),

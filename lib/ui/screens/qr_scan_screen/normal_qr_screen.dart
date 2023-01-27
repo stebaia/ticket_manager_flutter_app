@@ -108,8 +108,12 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                   indicatorColor: ThemeHelper.primaryColor),
               title: Text(
                 widget.user.courseName != null
-                    ? widget.user.courseName!.substring(0, 60).capitalize() +
-                        ".."
+                    ? widget.user.courseName!.length > 60
+                        ? widget.user.courseName!
+                                .substring(0, 60)
+                                .capitalize() +
+                            ".."
+                        : widget.user.courseName!.capitalize()
                     : AppLocalizations.of(context).scanQrCode,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),

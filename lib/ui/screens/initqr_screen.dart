@@ -68,8 +68,12 @@ class InitQrScreen extends StatelessWidget {
                           ? Container(
                               width: 250,
                               child: Text(
-                                user.courseName!.substring(0, 60).capitalize() +
-                                    "..",
+                                user.courseName!.length > 60
+                                    ? user.courseName!
+                                            .substring(0, 60)
+                                            .capitalize() +
+                                        ".."
+                                    : user.courseName!.capitalize(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),

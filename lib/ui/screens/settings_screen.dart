@@ -308,7 +308,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                 child: Text(AppLocalizations.of(context).yes),
                 onPressed: () {
                   requestLogout(idUser, envirorment).then((value) {
-                    if (value == 1) {
+                    if (value > -1) {
                       DatabaseHelper.instance.delete(idUser).then((value) =>
                           Navigator.pushAndRemoveUntil(
                               context,

@@ -9,7 +9,7 @@
    android:requestLegacyExternalStorage="true"
         android:label="Ticket Manager"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
         <provider
     android:name="androidx.core.content.FileProvider"
     android:authorities="${applicationId}.provider"

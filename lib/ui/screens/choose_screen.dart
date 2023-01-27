@@ -109,7 +109,7 @@ class ChooseScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                AppLocalizations.of(context).selectCourse,
+                                AppLocalizations.of(context).select_event,
                                 style: TextStyle(
                                     color: themeChange.darkTheme
                                         ? CupertinoColors.white
@@ -136,7 +136,8 @@ class ChooseScreen extends StatelessWidget {
                                       child: DropdownButton(
                                           isExpanded: true,
                                           hint: Text(
-                                            "Seleziona un evento",
+                                            AppLocalizations.of(context)
+                                                .select_event,
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold),
@@ -176,7 +177,7 @@ class ChooseScreen extends StatelessWidget {
                                   child: Text(dropDownStore.isSelected
                                       ? AppLocalizations.of(context).go_to_scan
                                       : AppLocalizations.of(context)
-                                          .selectCourse),
+                                          .select_event),
                                 ),
                               ),
                             )
