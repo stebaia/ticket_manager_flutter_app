@@ -162,6 +162,37 @@ class ChooseScreen extends StatelessWidget {
                             SizedBox(
                               height: 20,
                             ),
+                            Container(
+                              height: 50,
+                              width: MediaQuery.of(context).size.width,
+                              child: TextButton.icon(
+                                  icon: Icon(Icons.qr_code),
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.green,
+                                  ),
+                                  onPressed: () {
+                                    User updateUser = user!;
+                                    updateUser.courseId = 0;
+                                    updateUser.courseName = null;
+                                    DatabaseHelper.instance
+                                        .update(updateUser)
+                                        .then((value) =>
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          HomePageScreen(
+                                                            user: user!,
+                                                          )),
+                                              ModalRoute.withName('/home'),
+                                            ));
+                                  },
+                                  label: Text('Controllo accessi')))
+                                  ,
+                                  SizedBox(height: 20,),
+                        
                             Observer(
                               builder: (_) => Align(
                                 alignment: Alignment.centerRight,
