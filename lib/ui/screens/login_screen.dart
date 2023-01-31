@@ -122,7 +122,7 @@ class LoginScreen extends StatelessWidget {
         }
       }).onError((error, stackTrace) {
         Fluttertoast.showToast(
-            msg: 'Errore nella login',
+            msg: 'Credenziali non valide',
             textColor: Colors.white,
             backgroundColor: Colors.red);
       });

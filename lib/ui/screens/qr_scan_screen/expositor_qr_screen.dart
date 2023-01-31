@@ -103,15 +103,16 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                   Navigator.pop(context);
                 },
               ),
-              actions: [
-                Observer(builder: (_) => getHistory(context)),
-              ],
               backgroundColor: Colors.black,
               title: Text(
-                widget.user.courseName!.length > 60
-                    ? widget.user.courseName!.substring(0, 60).capitalize() +
-                        ".."
-                    : widget.user.courseName!.capitalize(),
+                widget.user.courseName != null
+                    ? widget.user.courseName!.length > 60
+                        ? widget.user.courseName!
+                                .substring(0, 60)
+                                .capitalize() +
+                            ".."
+                        : widget.user.courseName!.capitalize()
+                    : AppLocalizations.of(context).scanQrCode,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),

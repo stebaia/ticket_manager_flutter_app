@@ -22,6 +22,7 @@ import '../../network/course_service.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../provider/envirorment_provider.dart';
 import '../../store/dropdown_store/dropdown_store.dart';
+import '../../store/visibility_store/visibility_store.dart';
 import '../components/bazier_container.dart';
 
 class ChooseScreen extends StatelessWidget {
@@ -31,7 +32,7 @@ class ChooseScreen extends StatelessWidget {
   List<IdValueObject> idValueList = [];
   List<Course> getCourse = [];
   late Course selectedCourse;
-
+  final visibilityStore = VisibilityStore();
   CourseService courseService = CourseService();
 
   ChooseScreen({Key? key, required this.user}) : super(key: key);
@@ -59,203 +60,175 @@ class ChooseScreen extends StatelessWidget {
             ),
           ),
         ),
-        body: FutureBuilder(
-            future: getCourses(user!, envirormentProvider),
-            builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                getCourse = snapshot.data as List<Course>;
-                idValueList = mapCourseToIdValue(getCourse);
-                return Stack(
-                  children: [
-                    Positioned(
-                      top: MediaQuery.of(context).size.height * .60,
-                      right: MediaQuery.of(context).size.width * .3,
-                      child:
-                          RotatedBox(quarterTurns: 2, child: BezierContainer()),
-                    ),
-                    /*Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          height: 80,
-                          padding:
-                              EdgeInsets.only(left: 20, right: 20, top: 20),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.green,
-                              ),
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                          child: Column(children: [
-                            Text(
-                              AppLocalizations.of(context).manifestation,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            Text(
-                              user!.manifestationName!,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ]),
-                        )),
-                        */
-                    Container(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                AppLocalizations.of(context).select_event,
-                                style: TextStyle(
-                                    color: themeChange.darkTheme
-                                        ? CupertinoColors.white
-                                        : CupertinoColors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: ThemeHelper.primaryColor,
-                                  ),
-                                  color: ThemeHelper.primaryColor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              width: double.infinity,
-                              padding: EdgeInsets.all(8),
-                              child: Observer(
-                                  builder: (_) => DropdownButtonHideUnderline(
-                                      child: DropdownButton(
-                                          isExpanded: true,
-                                          hint: Text(
-                                            AppLocalizations.of(context)
-                                                .select_event,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          iconEnabledColor: Colors.white,
-                                          dropdownColor:
+        body: user!.userType != 106
+            ? FutureBuilder(
+                future: getCourses(user!, envirormentProvider),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    getCourse
+                        .add(Course(id: -1, description: 'Seleziona evento'));
+                    getCourse.addAll(snapshot.data as List<Course>);
+                    idValueList = mapCourseToIdValue(getCourse);
+                    return Stack(
+                      children: [
+                        Positioned(
+                          top: MediaQuery.of(context).size.height * .60,
+                          right: MediaQuery.of(context).size.width * .3,
+                          child: RotatedBox(
+                              quarterTurns: 2, child: BezierContainer()),
+                        ),
+                        Observer(builder: ((context) {
+                          return Visibility(
+                              visible: visibilityStore.isVisible,
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: Container(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextButton.icon(
+                                        icon: Icon(Icons.qr_code),
+                                        style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          backgroundColor:
                                               ThemeHelper.primaryColor,
-                                          items: dropDownListManifestation(),
-                                          value: dropDownStore.selectedItem,
-                                          onChanged: (value) {
-                                            IdValueObject selectedItem =
-                                                value as IdValueObject;
-                                            dropDownStore
-                                                .setSelectedItem(selectedItem);
-                                            selectedCourse = getCourse
-                                                .firstWhere((element) =>
-                                                    element.id ==
-                                                    selectedItem.id);
-                                            dropDownStore.setSelected(true);
-                                          }))),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              height: 50,
-                              width: MediaQuery.of(context).size.width,
-                              child: TextButton.icon(
-                                  icon: Icon(Icons.qr_code),
-                                  style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Colors.green,
+                                        ),
+                                        onPressed: () {
+                                          User updateUser = user!;
+                                          updateUser.courseId = 0;
+                                          updateUser.courseName = null;
+                                          DatabaseHelper.instance
+                                              .update(updateUser)
+                                              .then((value) =>
+                                                  Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            HomePageScreen(
+                                                              user: user!,
+                                                            )),
+                                                    ModalRoute.withName(
+                                                        '/home'),
+                                                  ));
+                                        },
+                                        label: Text('Controllo accessi'))),
+                              ));
+                        })),
+                        Container(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    AppLocalizations.of(context).select_event,
+                                    style: TextStyle(
+                                        color: themeChange.darkTheme
+                                            ? CupertinoColors.white
+                                            : CupertinoColors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  onPressed: () {
-                                    User updateUser = user!;
-                                    updateUser.courseId = 0;
-                                    updateUser.courseName = null;
-                                    DatabaseHelper.instance
-                                        .update(updateUser)
-                                        .then((value) =>
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          HomePageScreen(
-                                                            user: user!,
-                                                          )),
-                                              ModalRoute.withName('/home'),
-                                            ));
-                                  },
-                                  label: Text('Controllo accessi')))
-                                  ,
-                                  SizedBox(height: 20,),
-                        
-                            Observer(
-                              builder: (_) => Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    clickButtonToScan(
-                                        dropDownStore.isSelected, context);
-                                  },
-                                  child: Text(dropDownStore.isSelected
-                                      ? AppLocalizations.of(context).go_to_scan
-                                      : AppLocalizations.of(context)
-                                          .select_event),
                                 ),
-                              ),
-                            )
-                          ],
-                        ))
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              height: 50,
-                              width: 300,
-                              child: TextButton.icon(
-                                  icon: Icon(Icons.qr_code),
-                                  style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Colors.green,
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: ThemeHelper.primaryColor,
+                                      ),
+                                      color: ThemeHelper.primaryColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(8),
+                                  child: Observer(
+                                      builder: (_) =>
+                                          DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                                  isExpanded: true,
+                                                  hint: Text(
+                                                    AppLocalizations.of(context)
+                                                        .select_event,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  iconEnabledColor:
+                                                      Colors.white,
+                                                  dropdownColor:
+                                                      ThemeHelper.primaryColor,
+                                                  items:
+                                                      dropDownListManifestation(),
+                                                  value: dropDownStore
+                                                      .selectedItem,
+                                                  onChanged: (value) {
+                                                    if ((value as IdValueObject)
+                                                            .id !=
+                                                        -1) {
+                                                      visibilityStore
+                                                          .setSelected(false);
+                                                      dropDownStore
+                                                          .setSelected(true);
+                                                    } else {
+                                                      visibilityStore
+                                                          .setSelected(true);
+                                                      dropDownStore
+                                                          .setSelected(false);
+                                                    }
+                                                    IdValueObject selectedItem =
+                                                        value as IdValueObject;
+                                                    dropDownStore
+                                                        .setSelectedItem(
+                                                            selectedItem);
+                                                    selectedCourse = getCourse
+                                                        .firstWhere((element) =>
+                                                            element.id ==
+                                                            selectedItem.id);
+                                                  }))),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Observer(
+                                  builder: (_) => Align(
+                                    alignment: Alignment.centerRight,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        primary: Colors.white,
+                                        backgroundColor: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        clickButtonToScan(
+                                            dropDownStore.isSelected, context);
+                                      },
+                                      child: Text(dropDownStore.isSelected
+                                          ? AppLocalizations.of(context)
+                                              .go_to_scan
+                                          : AppLocalizations.of(context)
+                                              .select_event),
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    User updateUser = user!;
-                                    DatabaseHelper.instance
-                                        .update(updateUser)
-                                        .then((value) =>
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          HomePageScreen(
-                                                            user: user!,
-                                                          )),
-                                              ModalRoute.withName('/home'),
-                                            ));
-                                  },
-                                  label: Text('Controllo accessi')))
-                        ]));
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            })));
+                                )
+                              ],
+                            ))
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return controlloAccessi(context);
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }))
+            : controlloAccessi(context));
   }
 
   void clickButtonToScan(bool enabled, BuildContext context) async {
@@ -276,6 +249,47 @@ class ChooseScreen extends StatelessWidget {
     } else {
       return;
     }
+  }
+
+  Widget controlloAccessi(BuildContext context) {
+    return Stack(children: [
+      Positioned(
+        top: MediaQuery.of(context).size.height * .60,
+        right: MediaQuery.of(context).size.width * .3,
+        child: RotatedBox(quarterTurns: 2, child: BezierContainer()),
+      ),
+      Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    height: 50,
+                    width: 300,
+                    child: TextButton.icon(
+                        icon: Icon(Icons.qr_code),
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: ThemeHelper.primaryColor,
+                        ),
+                        onPressed: () {
+                          User updateUser = user!;
+                          DatabaseHelper.instance
+                              .update(updateUser)
+                              .then((value) => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            HomePageScreen(
+                                              user: user!,
+                                            )),
+                                    ModalRoute.withName('/home'),
+                                  ));
+                        },
+                        label: Text('Controllo accessi')))
+              ]))
+    ]);
   }
 
   List<DropdownMenuItem<IdValueObject>> dropDownListManifestation() {
