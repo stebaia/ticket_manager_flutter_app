@@ -81,6 +81,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                 color: themeChange.darkTheme ? Colors.white : Colors.black,
               ),
             ),
+            
             backgroundColor:
                 themeChange.darkTheme ? Colors.black : Colors.white,
           ),
@@ -91,23 +92,40 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                   ExpoisitorMapper expositorMapperData =
                       snapshot.data as ExpoisitorMapper;
                   if (expositorMapperData != null) {
-                    textEditingControllerSocialRegion.text =
-                        expositorMapperData.ragionesociale!;
+                    if (expositorMapperData.ragionesociale != null) {
+                      textEditingControllerSocialRegion.text =
+                          expositorMapperData.ragionesociale!;
+                    }
+                    if (expositorMapperData.cognome != null) {
                     textEditingControllerSurname.text =
                         expositorMapperData.cognome!;
+                    }
+                    if (expositorMapperData.nome != null) {
                     textEditingControllerName.text = expositorMapperData.nome!;
+                    }
+                    if (expositorMapperData.email != null) {
                     textEditingControllerEmail.text =
                         expositorMapperData.email!;
+                    }
+                        if (expositorMapperData.telefono != null) {
                     textEditingControllerPhone.text =
                         expositorMapperData.telefono!;
+                        }
+                        if (expositorMapperData.cap != null) {
                     textEditingControllerCap.text = expositorMapperData.cap!;
+                        }
+                    if (expositorMapperData.siglanazione != null) {
                     selectedValue = NationsUtils.getNationFromInitials(
                             expositorMapperData.siglanazione!)
                         .name;
+                    }
+                    if (expositorMapperData.siglaprovincia != null) {
                     selectedValueProvince =
                         ProvinceUtils.getProvinceFromInitials(
                                 expositorMapperData.siglaprovincia!)
                             .name;
+                    }
+
                     selectedItemyStoreNation.setSelectedItem(selectedValue);
                     selectedItemyStoreProvince
                         .setSelectedItem(selectedValueProvince);
