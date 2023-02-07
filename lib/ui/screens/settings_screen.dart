@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ticket_manager_flutter_app/network/logout_service.dart';
 import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
+import 'package:ticket_manager_flutter_app/ui/screens/expositor_detail_screen.dart';
 
 import '../../db/database_helper.dart';
 import '../../model/user_model/user.dart';
@@ -68,62 +69,66 @@ class _SettingUserScreenState extends State<SettingsScreen> {
           ),
         ),
       ),
-      Container(
-        height: 50,
-        color: themeChange.darkTheme
-            ? CupertinoColors.label
-            : CupertinoColors.white,
-        child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                Icon(
-                  CupertinoIcons.wifi_slash,
-                  color: themeChange.darkTheme
-                      ? CupertinoColors.white
-                      : CupertinoColors.label,
+      widget.user.userType != 106
+          ? Container(
+              height: 50,
+              color: themeChange.darkTheme
+                  ? CupertinoColors.label
+                  : CupertinoColors.white,
+              child: Padding(
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.wifi_slash,
+                        color: themeChange.darkTheme
+                            ? CupertinoColors.white
+                            : CupertinoColors.label,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Offline Mode',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                      Spacer(),
+                      CupertinoSwitch(
+                        value: offlineMode.getOfflineMode,
+                        onChanged: (value) async {
+                          if (value) {
+                            await DatabaseHelper.instance
+                                .getOfflineScan()
+                                .then((value) {
+                              if (value.isNotEmpty) {
+                                showInformationDialog(
+                                    context,
+                                    themeChange.darkTheme
+                                        ? Colors.black
+                                        : Colors.white,
+                                    themeChange.darkTheme
+                                        ? Colors.white
+                                        : Colors.black);
+                              }
+                            });
+                          }
+                          offlineMode.offlineMode = value;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Offline Mode',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color:
-                          themeChange.darkTheme ? Colors.white : Colors.black),
-                ),
-                Spacer(),
-                CupertinoSwitch(
-                  value: offlineMode.getOfflineMode,
-                  onChanged: (value) async {
-                    if (value) {
-                      await DatabaseHelper.instance
-                          .getOfflineScan()
-                          .then((value) {
-                        if (value.isNotEmpty) {
-                          showInformationDialog(
-                              context,
-                              themeChange.darkTheme
-                                  ? Colors.black
-                                  : Colors.white,
-                              themeChange.darkTheme
-                                  ? Colors.white
-                                  : Colors.black);
-                        }
-                      });
-                    }
-                    offlineMode.offlineMode = value;
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            )
+          : Container(),
       Container(
         height: 50,
         color: themeChange.darkTheme
@@ -164,6 +169,8 @@ class _SettingUserScreenState extends State<SettingsScreen> {
           ),
         ),
       ),
+      widget.user.userType == 106
+          ?
       GestureDetector(
         child: Container(
           height: 50,
@@ -177,7 +184,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
               child: Row(
                 children: [
                   Icon(
-                    CupertinoIcons.rocket,
+                    CupertinoIcons.hand_draw,
                     color: themeChange.darkTheme
                         ? CupertinoColors.white
                         : CupertinoColors.label,
@@ -186,7 +193,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                     width: 10,
                   ),
                   Text(
-                    'Root Mode',
+                    'Manual Mode',
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -206,14 +213,15 @@ class _SettingUserScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
-        onDoubleTap: () {
-          /*Navigator.push(
+        onTap: () {
+
+          Navigator.push(
                 context,
-                CupertinoPageRoute(builder: (context) => RootScreen()),
+                MaterialPageRoute(builder: (context) => ExpositorDetailScreen(user: widget.user,isNew: true,)),
               );
-              */
+              
         },
-      ),
+      ): Container(),
       GestureDetector(
           child: Container(
             height: 60,

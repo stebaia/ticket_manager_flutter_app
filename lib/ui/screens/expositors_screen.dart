@@ -120,6 +120,7 @@ class _ExpositorListScreenState extends State<ExpositorsScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ExpositorDetailScreen(
                                   user: user,
+                                  isNew: false,
                                   idUtente:
                                       int.parse(expositorList[index].idextra!),
                                 ),

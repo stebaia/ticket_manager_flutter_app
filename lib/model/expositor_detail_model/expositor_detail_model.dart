@@ -90,26 +90,28 @@ class GetUtenteExtraResult {
       miatabella = ExpoisitorMapper();
       try {
         miatabella!.ragionesociale =
-            json['string'] != "NULL" ? json['string'][0] : null;
-        miatabella!.nome = json['string'] != "NULL" ? json['string'][1] : null;
+            json['string'][0] != "NULL" ? json['string'][0] : null;
+        miatabella!.nome = json['string'][1] != "NULL" ? json['string'][1] : null;
         miatabella!.cognome =
-            json['string'] != "NULL" ? json['string'][2] : null;
+            json['string'][2] != "NULL" ? json['string'][2] : null;
         miatabella!.telefono =
-            json['string'] != "NULL" ? json['string'][3] : null;
-        miatabella!.cap = json['string'] != "NULL" ? json['string'][4] : null;
-        miatabella!.email = json['string'] != "NULL" ? json['string'][5] : null;
+            json['string'][3] != "NULL" ? json['string'][3] : null;
+        miatabella!.cap = json['string'][4] != "NULL" ? json['string'][4] : null;
+        miatabella!.email = json['string'][5] != "NULL" ? json['string'][5] : null;
         miatabella!.siglanazione =
-            json['string'] != "NULL" ? json['string'][6] : null;
+            json['string'][6] != "NULL" ? json['string'][6] : null;
         miatabella!.siglaprovincia =
-            json['string'] != "NULL" ? json['string'][7] : null;
-        miatabella!.note = json['string'] != "NULL" ? json['string'][8] : null;
-        miatabella!.foto1 = json['string'] != "NULL" ? json['string'][9] : null;
+            json['string'][7] != "NULL" ? json['string'][7] : null;
+        miatabella!.note = json['string'][8] != "NULL" ? json['string'][8] : null;
+        miatabella!.foto1 = json['string'][9] != "NULL" ? json['string'][9] : null;
         miatabella!.foto2 =
-            json['string'] != "NULL" ? json['string'][10] : null;
+            json['string'][10] != "NULL" ? json['string'][10] : null;
         miatabella!.foto3 =
-            json['string'] != "NULL" ? json['string'][11] : null;
+            json['string'][11] != "NULL" ? json['string'][11] : null;
         miatabella!.valore =
-            json['string'] != "NULL" ? json['string'][12] : null;
+            json['string'][12] != "NULL" ? json['string'][12] : null;
+        miatabella!.idextra =
+            json['string'][13] != "NULL" ? json['string'][13] : null;
       } catch (e) {
         miatabella = ExpoisitorMapper();
       }

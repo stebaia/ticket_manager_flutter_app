@@ -251,7 +251,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                     children: [
                       CheckboxListTile(
                           side: BorderSide(color: anotherColor),
-                          checkColor: anotherColor,
+                          
                           title: Text(
                             "Acconsenti al trattamento della privacy",
                             style: TextStyle(fontSize: 12),
@@ -303,6 +303,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                     builder: ((context) =>
                                         ExpositorDetailScreen(
                                           user: widget.user,
+                                          isNew: false,
                                           codice20: codiceScan,
                                         ))));
                           }

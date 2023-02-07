@@ -10,6 +10,7 @@ class VivaticketApi {
   static const String _getUsersExtra = 'GetUsersExtra';
   static const String _getUserExtra = 'GetUtenteExtra';
   static const String _setUtenteApp = 'Setutenteapp';
+  static const String _setUtenteAppManual = 'Setutenteappmanuale';
   static const String _getUterExtra20 = 'GetUtenteExtraByCode20';
 
   static String serverName(Envirorment envirorment) {
@@ -48,5 +49,8 @@ class VivaticketApi {
       endpoint(envirorment) + _getUterExtra20;
 
   static String REQUEST_SET_UTENTE_APP(Envirorment envirorment) =>
+      endpoint(envirorment) + _setUtenteApp;
+
+  static String REQUEST_SET_UTENTE_APP_MANUAL(Envirorment envirorment) =>
       endpoint(envirorment) + _setUtenteApp;
 }

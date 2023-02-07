@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:xml/xml.dart';
+
 class ExpoisitorMapper {
   String? idextra;
   String? idparent;
@@ -44,19 +47,21 @@ class ExpoisitorMapper {
       this.foto3,
       this.privacyCommerciale});
 
+  
+
   ExpoisitorMapper.fromJson(Map<String, dynamic> json) {
     idextra = json['Idextra'];
     idparent = json['Idparent'];
     idmanifestazione = json['Idmanifestazione'];
     admin = json['Admin'];
     titolidisponibili = json['Titolidisponibili'];
-    nome = json['Nome'];
-    cognome = json['Cognome'];
-    ragionesociale = json['Ragionesociale'];
-    email = json['Email'];
-    cap = json['Cap'];
-    telefono = json['Telefono'];
-    note = json['Note'];
+    nome = json['Nome'] == "NULL" ? "" : json['Nome'];
+    cognome = json['Cognome'] == "NULL" ? "" : json['Cognome'];
+    ragionesociale = json['Ragionesociale'] == "NULL" ? "" : json['Ragionesociale'];
+    email = json['Email'] == "NULL" ? "" : json['Email'];
+    cap = json['Cap'] == "NULL" ? "" : json['Cap'];
+    telefono = json['Telefono']== "NULL" ? "" : json['Telefono'];
+    note = json['Note']== "NULL" ? "" : json['Note'];
     siglanazione = json['Siglanazione'];
     siglaprovincia = json['Siglaprovincia'];
     idtipologia = json['Idtipologia'];
