@@ -132,15 +132,18 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
-                          await showInformationDialog(
-                              context,
-                              themeChange.darkTheme
-                                  ? Colors.black
-                                  : Colors.white,
-                              themeChange.darkTheme
-                                  ? Colors.white
-                                  : Colors.black);
-
+                          
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) =>
+                                        ExpositorDetailScreen(
+                                          user: widget.user,
+                                          isNew: false,
+                                          codice20: codiceScan,
+                                        ))));
+                          
                           //visibilityStore.setSelected(false);
 
                           //cameraController.stop();

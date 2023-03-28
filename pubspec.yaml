@@ -75,7 +75,7 @@ dev_dependencies:
 
 flutter_icons:
   ios: true
-  image_path: "assets/iconaapp.png"
+  image_path: "assets/iconaapp.jpg"
   min_sdk_android: 21 # android min sdk min:16, default 21
 
 flutter_native_splash:
