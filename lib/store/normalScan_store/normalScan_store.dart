@@ -34,10 +34,16 @@ abstract class _NormalScanStore with Store {
       String idcorso,
       String ckexit,
       Envirorment envirorment) async {
-    final future = scanScervice.requestCheckManager(idmanifestazione, codice20,
+        try{
+ final future = scanScervice.requestCheckManager(idmanifestazione, codice20,
         idutilizzatore, idcorso, ckexit, envirorment);
     fetchScanResult = ObservableFuture(future);
     return scanState = await future;
+        }catch(e){
+          
+          return Future<CheckManagerResult>.value(CheckManagerResult(value: "250", description: "Errore nella scansione",));
+        }
+   
   }
 
   @action

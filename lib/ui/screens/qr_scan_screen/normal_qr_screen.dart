@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model.dart';
@@ -20,7 +21,6 @@ import 'package:ticket_manager_flutter_app/utils/extension.dart';
 import 'package:ticket_manager_flutter_app/utils/sound_helper.dart';
 import 'package:ticket_manager_flutter_app/utils/sound_play.dart';
 import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
-
 import '../../../db/database_helper.dart';
 import '../../../model/scan_offline.dart';
 import '../../../model/user_model/user.dart';
@@ -136,6 +136,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                             codiceScan = barcode.rawValue!;
                             lastBarcode = barcode.rawValue!;
                             SoundHelper.play(0, player);
+                            SVProgressHUD.show();
                             //cameraController.stop();
                             if (offlineMode.getOfflineMode) {
                               //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
@@ -287,6 +288,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
   }
 
   Widget getLayerScan() {
+    SVProgressHUD.dismiss();
     if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
         int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
       SoundHelper.play(3, player);
