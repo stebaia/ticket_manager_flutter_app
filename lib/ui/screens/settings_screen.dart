@@ -104,22 +104,21 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                       CupertinoSwitch(
                         value: offlineMode.getOfflineMode,
                         onChanged: (value) async {
-                          if (value) {
-                            await DatabaseHelper.instance
-                                .getOfflineScan()
-                                .then((value) {
-                              if (value.isNotEmpty) {
-                                showInformationDialog(
-                                    context,
-                                    themeChange.darkTheme
-                                        ? Colors.black
-                                        : Colors.white,
-                                    themeChange.darkTheme
-                                        ? Colors.white
-                                        : Colors.black);
-                              }
-                            });
-                          }
+                          await DatabaseHelper.instance
+                              .getOfflineScan()
+                              .then((value) {
+                            if (value.isNotEmpty) {
+                              showInformationDialog(
+                                  context,
+                                  themeChange.darkTheme
+                                      ? Colors.black
+                                      : Colors.white,
+                                  themeChange.darkTheme
+                                      ? Colors.white
+                                      : Colors.black);
+                            }
+                          });
+
                           offlineMode.offlineMode = value;
                         },
                       ),
@@ -170,58 +169,61 @@ class _SettingUserScreenState extends State<SettingsScreen> {
         ),
       ),
       widget.user.userType == 106
-          ?
-      GestureDetector(
-        child: Container(
-          height: 50,
-          color: themeChange.darkTheme
-              ? CupertinoColors.label
-              : CupertinoColors.white,
-          child: Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.hand_draw,
-                    color: themeChange.darkTheme
-                        ? CupertinoColors.white
-                        : CupertinoColors.label,
+          ? GestureDetector(
+              child: Container(
+                height: 50,
+                color: themeChange.darkTheme
+                    ? CupertinoColors.label
+                    : CupertinoColors.white,
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.hand_draw,
+                          color: themeChange.darkTheme
+                              ? CupertinoColors.white
+                              : CupertinoColors.label,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'Manual Mode',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: themeChange.darkTheme
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                        Spacer(),
+                        Icon(
+                          CupertinoIcons.chevron_forward,
+                          color: themeChange.darkTheme
+                              ? CupertinoColors.white
+                              : CupertinoColors.label,
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Manual Mode',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: themeChange.darkTheme
-                            ? Colors.white
-                            : Colors.black),
-                  ),
-                  Spacer(),
-                  Icon(
-                    CupertinoIcons.chevron_forward,
-                    color: themeChange.darkTheme
-                        ? CupertinoColors.white
-                        : CupertinoColors.label,
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
-        onTap: () {
-
-          Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ExpositorDetailScreen(user: widget.user,isNew: true,)),
-              );
-              
-        },
-      ): Container(),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ExpositorDetailScreen(
+                            user: widget.user,
+                            isNew: true,
+                          )),
+                );
+              },
+            )
+          : Container(),
       GestureDetector(
           child: Container(
             height: 60,
@@ -280,10 +282,56 @@ class _SettingUserScreenState extends State<SettingsScreen> {
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+                title: Text("Attenzione!",
+                    style: TextStyle(
+                      color: anotherColor,
+                    )),
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: TextStyle(color: Colors.black),
+                      backgroundColor: Color.fromARGB(0, 252, 252, 252),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      "No",
+                      style: TextStyle(
+                          color: anotherColor, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.green,
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      "Si, invia!",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
                 backgroundColor: backgroundColor,
                 content: Container(
-                  height: 300,
+                  height: 150,
                   width: 300,
+                  child: Column(children: [
+                    Text(
+                      "Sono presenti delle scannerizzazioni offline",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18, color: anotherColor),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text("Vuoi inviarle al server?",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: anotherColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                  ]),
                 ));
           });
         });

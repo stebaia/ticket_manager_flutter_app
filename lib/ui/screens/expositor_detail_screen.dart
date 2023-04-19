@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_manager_flutter_app/model/expositor_mapper/expositor_mapper.dart';
@@ -73,7 +74,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
     idUtente = widget.idUtente;
     codice20 = widget.codice20;
     isNew = widget.isNew;
-    
+
     if (!isNew) {
       requestGetUtente().then((expositorMapperData) {
         visibilityStore.setSelected(false);
@@ -121,7 +122,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
       selectedValueProvince = "Rimini";
       selectedItemyStoreNation.setSelectedItem(selectedValue);
       selectedItemyStoreProvince.setSelectedItem(selectedValueProvince);
-       visibilityStore.setSelected(false);
+      visibilityStore.setSelected(false);
     }
 
     super.initState();
@@ -132,6 +133,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return WillPopScope(
         onWillPop: () async {
+          SVProgressHUD.dismiss();
           await showDismissDialogForFuture();
           return shouldClose;
         },
@@ -148,9 +150,8 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
               backgroundColor:
                   themeChange.darkTheme ? Colors.black : Colors.white,
             ),
-            body: Observer(
-              builder: (context) {
-                if(!visibilityStore.isVisible){
+            body: Observer(builder: (context) {
+              if (!visibilityStore.isVisible) {
                 return Container(
                     padding: EdgeInsets.all(8),
                     child: SingleChildScrollView(
@@ -163,7 +164,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             textEditingControllerSocialRegion,
                             AppLocalizations.of(context).socialRegion,
                             1,
-                            themeChange.darkTheme ? Colors.white : Colors.black),
+                            themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
                         SizedBox(
                           height: 14,
                         ),
@@ -171,7 +174,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             textEditingControllerSurname,
                             AppLocalizations.of(context).surname,
                             1,
-                            themeChange.darkTheme ? Colors.white : Colors.black),
+                            themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
                         SizedBox(
                           height: 14,
                         ),
@@ -179,7 +184,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             textEditingControllerName,
                             AppLocalizations.of(context).name,
                             1,
-                            themeChange.darkTheme ? Colors.white : Colors.black),
+                            themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
                         SizedBox(
                           height: 14,
                         ),
@@ -187,7 +194,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             textEditingControllerEmail,
                             AppLocalizations.of(context).email,
                             1,
-                            themeChange.darkTheme ? Colors.white : Colors.black),
+                            themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
                         SizedBox(
                           height: 14,
                         ),
@@ -195,7 +204,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             textEditingControllerPhone,
                             AppLocalizations.of(context).telephone,
                             1,
-                            themeChange.darkTheme ? Colors.white : Colors.black),
+                            themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
                         SizedBox(
                           height: 14,
                         ),
@@ -203,14 +214,16 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             textEditingControllerCap,
                             AppLocalizations.of(context).cap,
                             1,
-                            themeChange.darkTheme ? Colors.white : Colors.black),
+                            themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
                         SizedBox(
                           height: 14,
                         ),
                         Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              color: Color.fromARGB(109, 146, 196, 165),
+                              color: Color.fromARGB(108, 201, 198, 19),
                             ),
                             padding: EdgeInsets.all(4),
                             child: Column(
@@ -308,7 +321,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             textEditingControllerNote,
                             AppLocalizations.of(context).notes,
                             5,
-                            themeChange.darkTheme ? Colors.white : Colors.black),
+                            themeChange.darkTheme
+                                ? Colors.white
+                                : Colors.black),
                         SizedBox(
                           height: 14,
                         ),
@@ -387,7 +402,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                       EdgeInsets.symmetric(horizontal: 4.0),
                                   itemBuilder: (context, _) => Icon(
                                     CupertinoIcons.star_fill,
-                                    color: Colors.green,
+                                    color: Colors.orange,
                                   ),
                                   onRatingUpdate: (rating) {
                                     print(rating);
@@ -406,11 +421,12 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                           child: MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18)),
-                            color: Colors.green,
+                            color: Colors.orange,
                             textColor: Colors.white,
                             height: 46,
                             minWidth: MediaQuery.of(context).size.width,
                             onPressed: () {
+                              SVProgressHUD.show();
                               setUtenteApp(
                                       isNew,
                                       user.id.toString(),
@@ -427,39 +443,61 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                       textEditingControllerSurname.text,
                                       textEditingControllerPhone.text,
                                       textEditingControllerSocialRegion.text,
-                                      expoisitorMapper != null ? expoisitorMapper!.idextra : null,
+                                      expoisitorMapper != null
+                                          ? expoisitorMapper!.idextra
+                                          : null,
                                       envirormentProvider.envirormentState)
                                   .then((value) => {
                                         if (value != 0)
                                           {
+                                            SVProgressHUD.dismiss(),
                                             Navigator.pop(context),
                                             Fluttertoast.showToast(
-                                                msg: AppLocalizations.of(context)
+                                                msg: AppLocalizations.of(
+                                                        context)
                                                     .contentToastSetUtenteOk,
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.BOTTOM,
                                                 timeInSecForIosWeb: 1,
                                                 backgroundColor:
                                                     CupertinoColors.black,
-                                                textColor: CupertinoColors.white,
+                                                textColor:
+                                                    CupertinoColors.white,
                                                 fontSize: 16.0),
                                           }
                                         else
                                           {
+                                            SVProgressHUD.dismiss(),
                                             Fluttertoast.showToast(
-                                                msg: AppLocalizations.of(context)
+                                                msg: AppLocalizations.of(
+                                                        context)
                                                     .contentToastSetUtenteko,
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.BOTTOM,
                                                 timeInSecForIosWeb: 1,
                                                 backgroundColor:
-                                                    CupertinoColors.black,
-                                                textColor: CupertinoColors.white,
+                                                    CupertinoColors.systemRed,
+                                                textColor:
+                                                    CupertinoColors.white,
                                                 fontSize: 16.0),
                                           }
-                                      });
+                                      })
+                                  .onError((error, stackTrace) {
+                                SVProgressHUD.dismiss();
+                                Fluttertoast.showToast(
+                                    msg: AppLocalizations.of(context)
+                                        .contentToastSetUtenteko,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: CupertinoColors.systemRed,
+                                    textColor: CupertinoColors.white,
+                                    fontSize: 16.0);
+                                return Future.value();
+                              });
                             },
-                            child: Text(AppLocalizations.of(context).saveExpositor),
+                            child: Text(
+                                AppLocalizations.of(context).saveExpositor),
                           ),
                           padding: EdgeInsets.all(8),
                         ),
@@ -468,12 +506,10 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         )
                       ],
                     )));
-                }else{
-                  return Center(child: CircularProgressIndicator());
-                }
+              } else {
+                return Center(child: CircularProgressIndicator());
               }
-              
-            )));
+            })));
   }
 
   Future showDismissDialogForFuture() async {
@@ -513,7 +549,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
         maxLines: lines,
         controller: textEditingController,
         decoration: InputDecoration(
-            labelStyle: TextStyle(color: Colors.green),
+            labelStyle: TextStyle(color: Colors.orange),
             enabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: borderColor)),
             border: OutlineInputBorder(),
@@ -574,7 +610,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
   List<Widget> provinceList = List.generate(ProvinceUtils.provinces.length,
       (index) => Text(ProvinceUtils.provinces[index].name));
 
-  Future<int> setUtenteApp(bool isNew, String expositorId,
+  Future<int> setUtenteApp(
+      bool isNew,
+      String expositorId,
       String manifestationId,
       String codice20,
       String note,
@@ -587,13 +625,38 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
       String telefono,
       String ragioneSociale,
       String? idExtra,
-      Envirorment envirorment){
-    
-    if(isNew){
-      return requestSetUtenteAppManual(expositorId, manifestationId, note, cap, email, siglaNatzione, siglaProvincia, nome, cognome, telefono, ragioneSociale, envirorment);
-    }else{
+      Envirorment envirorment) {
+    if (isNew) {
+      return requestSetUtenteAppManual(
+          expositorId,
+          manifestationId,
+          note,
+          cap,
+          email,
+          siglaNatzione,
+          siglaProvincia,
+          nome,
+          cognome,
+          telefono,
+          ragioneSociale,
+          envirorment);
+    } else {
       idExtra ??= "";
-      return requestSetUtenteApp(expositorId, manifestationId, codice20, note, cap, email, siglaNatzione, siglaProvincia, nome, cognome, telefono, ragioneSociale, idExtra!, envirorment);
+      return requestSetUtenteApp(
+          expositorId,
+          manifestationId,
+          codice20,
+          note,
+          cap,
+          email,
+          siglaNatzione,
+          siglaProvincia,
+          nome,
+          cognome,
+          telefono,
+          ragioneSociale,
+          idExtra!,
+          envirorment);
     }
   }
 

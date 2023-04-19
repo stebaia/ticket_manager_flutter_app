@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ticket_manager_flutter_app/network/login_service.dart';
 import 'package:ticket_manager_flutter_app/provider/dark_theme_provider.dart';
@@ -93,10 +94,12 @@ class LoginScreen extends StatelessWidget {
 
     void loginRequest(String email, String password, BuildContext buildContext,
         Envirorment envirorment) {
+      SVProgressHUD.show();
       LoginService loginService = LoginService();
       Future<User> futureUser =
           loginService.requestLogin(email, password, envirorment);
       futureUser.then((user) {
+        SVProgressHUD.dismiss();
         DatabaseHelper.instance.add(user);
         switch (user.userType) {
           case 107:
@@ -121,6 +124,7 @@ class LoginScreen extends StatelessWidget {
             break;
         }
       }).onError((error, stackTrace) {
+        SVProgressHUD.dismiss();
         Fluttertoast.showToast(
             msg: 'Credenziali non valide',
             textColor: Colors.white,
