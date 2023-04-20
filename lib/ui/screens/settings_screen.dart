@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ticket_manager_flutter_app/model/scan_offline.dart';
 import 'package:ticket_manager_flutter_app/network/logout_service.dart';
+import 'package:ticket_manager_flutter_app/network/send_code_offline_service.dart';
 import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
 import 'package:ticket_manager_flutter_app/ui/screens/expositor_detail_screen.dart';
 
@@ -27,6 +30,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingUserScreenState extends State<SettingsScreen> {
+  EnvirormentProvider envirormentProvider = EnvirormentProvider();
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
@@ -115,7 +119,8 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                                       : Colors.white,
                                   themeChange.darkTheme
                                       ? Colors.white
-                                      : Colors.black);
+                                      : Colors.black,
+                                  value);
                             }
                           });
 
@@ -276,7 +281,10 @@ class _SettingUserScreenState extends State<SettingsScreen> {
   }
 
   Future<void> showInformationDialog(
-      BuildContext context, Color backgroundColor, Color anotherColor) async {
+      BuildContext context,
+      Color backgroundColor,
+      Color anotherColor,
+      List<OfflineScan> offlineScan) async {
     return await showDialog(
         context: context,
         builder: (context) {
@@ -304,8 +312,34 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                       primary: Colors.white,
                       backgroundColor: Colors.green,
                     ),
-                    onPressed: () {},
-                    child: Text(
+                    onPressed: () async {
+                      SendOfflineService sendOfflineService =
+                          SendOfflineService();
+                      for (final scan in offlineScan) {
+                        sendOfflineService.sendOffline(
+                            scan.idManifestazione.toString(),
+                            scan.idCorso.toString(),
+                            scan.idUtilizzatore.toString(),
+                            scan.dataOra,
+                            scan.ckExit,
+                            scan.codice,
+                            envirormentProvider.envirormentState);
+                        await DatabaseHelper.instance
+                            .deleteOfflineScan(scan.codice)
+                            .then((value) => Fluttertoast.showToast(
+                                msg:
+                                    "Scannerizzazione con codice ${scan.codice} inviata correttamente"))
+                            .onError((error, stackTrace) {
+                          Fluttertoast.showToast(
+                              backgroundColor: Colors.red,
+                              msg:
+                                  "Errore nell'invio della scannerizzazione con codice ${scan.codice}");
+                          return Future<bool>.value(true);
+                        });
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
                       "Si, invia!",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
