@@ -641,7 +641,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
           ragioneSociale,
           envirorment);
     } else {
-      idExtra ??= "";
+      idExtra ??= "0";
       return requestSetUtenteApp(
           expositorId,
           manifestationId,
