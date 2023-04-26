@@ -121,14 +121,14 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                   ),
                   Text(
                     widget.user.courseName != null
-                        ? widget.user.courseName!.length > 60
+                        ? widget.user.courseName!.length > 50
                             ? widget.user.courseName!
-                                    .substring(0, 60)
+                                    .substring(0, 50)
                                     .capitalize() +
                                 ".."
-                            : widget.user.courseName!.capitalize()
+                            : widget.user.courseName!
                         : AppLocalizations.of(context).scanQrCode,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ],
               ),
@@ -304,7 +304,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
   Widget getLayerScan() {
     if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
         int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
-      SoundHelper.play(3, player);
+      SoundHelper.play(1, player);
       return GestureDetector(
         child: Container(
             height: double.infinity,
