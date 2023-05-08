@@ -106,31 +106,35 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                   tabs: tabBarWidget(),
                   indicatorWeight: 6,
                   indicatorColor: ThemeHelper.primaryColor),
-              title: Column(
-                children: [
-                  Text(
-                    widget.user.manifestationName != null
-                        ? widget.user.manifestationName!.length > 60
-                            ? widget.user.manifestationName!
-                                    .substring(0, 60)
-                                    .capitalize() +
-                                ".."
-                            : widget.user.manifestationName!.capitalize()
-                        : AppLocalizations.of(context).scanQrCode,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                  Text(
-                    widget.user.courseName != null
-                        ? widget.user.courseName!.length > 50
-                            ? widget.user.courseName!
-                                    .substring(0, 50)
-                                    .capitalize() +
-                                ".."
-                            : widget.user.courseName!
-                        : AppLocalizations.of(context).scanQrCode,
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                ],
+              title: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.user.manifestationName != null
+                          ? widget.user.manifestationName!.length > 60
+                              ? widget.user.manifestationName!
+                                      .substring(0, 60)
+                                      .capitalize() +
+                                  ".."
+                              : widget.user.manifestationName!.capitalize()
+                          : AppLocalizations.of(context).scanQrCode,
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    Text(
+                      widget.user.courseName != null
+                          ? widget.user.courseName!.length > 50
+                              ? widget.user.courseName!
+                                      .substring(0, 50)
+                                      .capitalize() +
+                                  ".."
+                              : widget.user.courseName!
+                          : AppLocalizations.of(context).scanQrCode,
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
             ),
             body: Stack(
