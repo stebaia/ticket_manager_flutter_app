@@ -128,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
             break;
         }
       }).onError((error, stackTrace) {
+        SVProgressHUD.dismiss();
         Fluttertoast.showToast(
             msg: 'Credenziali non valide',
             textColor: Colors.white,
