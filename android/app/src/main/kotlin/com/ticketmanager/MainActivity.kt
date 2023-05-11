@@ -72,8 +72,8 @@ class MainActivity: FlutterActivity() {
                 if (intent.action.equals(PROFILE_INTENT_ACTION))
                 {
                     //  A barcode has been scanned
-                    var scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-                    var symbology = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_LABEL_TYPE)
+                    var scanData: String = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)!!
+                    var symbology: String = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_LABEL_TYPE)!!
                     var date = Calendar.getInstance().getTime()
                     var df = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
                     var dateTimeString = df.format(date)
@@ -120,5 +120,4 @@ class MainActivity: FlutterActivity() {
     }
 }
 
-About
 

@@ -278,7 +278,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                 'idUser': widget.user.id,
                 'envirorment': envirormentTheme.envirormentState.toString()
               })),
-              GestureDetector(
+      /*GestureDetector(
           child: Container(
             height: 60,
             color: themeChange.darkTheme
@@ -322,7 +322,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
             ),
           ),
           onTap: () => Navigator.push(context, MaterialPageRoute(builder:(context) => ZebraScannerPage(),))
-              ),
+              ),*/
     ]));
   }
 
