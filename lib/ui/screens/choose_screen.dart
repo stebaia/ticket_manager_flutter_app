@@ -65,6 +65,7 @@ class ChooseScreen extends StatelessWidget {
                 future: getCourses(user!, envirormentProvider),
                 builder: ((context, snapshot) {
                   if (snapshot.hasData) {
+                    getCourse.clear();
                     getCourse
                         .add(Course(id: -1, description: 'Seleziona evento'));
                     getCourse.addAll(snapshot.data as List<Course>);
@@ -138,7 +139,6 @@ class ChooseScreen extends StatelessWidget {
                                   height: 10,
                                 ),
                                 Container(
-                                    height: 80,
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                           color: ThemeHelper.primaryColor,
@@ -147,48 +147,61 @@ class ChooseScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20))),
                                     width: double.infinity,
-                                    padding: EdgeInsets.all(4),
+                                    padding: EdgeInsets.all(2),
                                     child: Center(
                                       child: Observer(
-                                          builder: (_) => DropdownButton(
-                                              isExpanded: true,
-                                              hint: Text(
-                                                AppLocalizations.of(context)
-                                                    .select_event,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              iconEnabledColor: Colors.white,
-                                              dropdownColor:
-                                                  ThemeHelper.primaryColor,
-                                              items: dropDownListManifestation(
-                                                  context),
-                                              value: dropDownStore.selectedItem,
-                                              onChanged: (value) {
-                                                if ((value as IdValueObject)
-                                                        .id !=
-                                                    -1) {
-                                                  visibilityStore
-                                                      .setSelected(false);
-                                                  dropDownStore
-                                                      .setSelected(true);
-                                                } else {
-                                                  visibilityStore
-                                                      .setSelected(true);
-                                                  dropDownStore
-                                                      .setSelected(false);
-                                                }
-                                                IdValueObject selectedItem =
-                                                    value as IdValueObject;
-                                                dropDownStore.setSelectedItem(
-                                                    selectedItem);
-                                                selectedCourse = getCourse
-                                                    .firstWhere((element) =>
-                                                        element.id ==
-                                                        selectedItem.id);
-                                              })),
+                                          builder: (_) =>
+                                              DropdownButtonHideUnderline(
+                                                child: DropdownButton(
+                                                    dropdownColor:
+                                                        Color.fromARGB(
+                                                            255, 245, 242, 242),
+                                                    itemHeight: 80,
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .select_event,
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    iconEnabledColor:
+                                                        Colors.white,
+                                                    items:
+                                                        dropDownListManifestation(
+                                                            context),
+                                                    value: dropDownStore
+                                                        .selectedItem,
+                                                    onChanged: (value) {
+                                                      if ((value as IdValueObject)
+                                                              .id !=
+                                                          -1) {
+                                                        visibilityStore
+                                                            .setSelected(false);
+                                                        dropDownStore
+                                                            .setSelected(true);
+                                                      } else {
+                                                        visibilityStore
+                                                            .setSelected(true);
+                                                        dropDownStore
+                                                            .setSelected(false);
+                                                      }
+                                                      IdValueObject
+                                                          selectedItem = value
+                                                              as IdValueObject;
+                                                      dropDownStore
+                                                          .setSelectedItem(
+                                                              selectedItem);
+                                                      selectedCourse =
+                                                          getCourse.firstWhere(
+                                                              (element) =>
+                                                                  element.id ==
+                                                                  selectedItem
+                                                                      .id);
+                                                    }),
+                                              )),
                                     )),
                                 SizedBox(
                                   height: 20,
@@ -293,27 +306,50 @@ class ChooseScreen extends StatelessWidget {
       BuildContext context) {
     return idValueList
         .map((e) => DropdownMenuItem(
-              child: Container(
-                padding: EdgeInsets.all(4),
-                margin: EdgeInsets.all(4),
-                height: 100,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Center(
-                  child: Text(
-                    e.value,
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
               value: e,
+              child: Container(
+                  height: 80,
+                  margin: EdgeInsets.all(4),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(children: [
+                    e.id > -1
+                        ? SizedBox(
+                            width: 10,
+                          )
+                        : Container(),
+                    e.id > -1
+                        ? Icon(
+                            Icons.more_vert,
+                            color: Colors.black26,
+                          )
+                        : Container(),
+                    e.id > -1
+                        ? SizedBox(
+                            width: 10,
+                          )
+                        : Container(),
+                    e.id > -1
+                        ? Icon(
+                            Icons.event,
+                            color: ThemeHelper.primaryColor,
+                          )
+                        : Container(),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Flexible(
+                      child: Text(
+                        e.value,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12),
+                      ),
+                    )
+                  ])),
             ))
         .toList();
   }
