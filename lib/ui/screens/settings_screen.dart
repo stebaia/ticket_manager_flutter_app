@@ -321,7 +321,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder:(context) => ZebraScannerPage(),))
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder:(context) => ZebraScannerPage(user: widget.user,),))
               ),
     ]));
   }
