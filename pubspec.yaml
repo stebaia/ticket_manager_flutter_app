@@ -38,7 +38,7 @@ dependencies:
   flutter_mobx: ^2.0.6+1
   mobile_scanner: ^2.0.0
   auto_route: ^4.2.1
-  intl: ^0.17.0
+  intl: ^0.18.0
   xml2json: ^5.3.2
   sqflite: ^2.0.2
   path_provider: ^2.0.11
