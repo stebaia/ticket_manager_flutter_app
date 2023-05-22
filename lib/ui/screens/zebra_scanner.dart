@@ -1,20 +1,41 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
+import 'package:ticket_manager_flutter_app/model/user_model/user.dart';
+import 'package:ticket_manager_flutter_app/network/history_service.dart';
+import 'package:ticket_manager_flutter_app/network/visitors_service.dart';
+import 'package:ticket_manager_flutter_app/provider/envirorment_provider.dart';
+import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
+import 'package:ticket_manager_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
+import 'package:ticket_manager_flutter_app/store/normalScan_store/normalScan_store.dart';
+import 'package:ticket_manager_flutter_app/store/visibility_store/visibility_store.dart';
+import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
 
 class ZebraScannerPage extends StatefulWidget {
-  const ZebraScannerPage({super.key});
-
+  ZebraScannerPage({super.key, required this.user});
+  User user;
   @override
   State<ZebraScannerPage> createState() => _ZebraScannerPageState();
 }
 
-class _ZebraScannerPageState extends State<ZebraScannerPage> {
- static const MethodChannel methodChannel =
+class _ZebraScannerPageState extends State<ZebraScannerPage>
+    with TickerProviderStateMixin {
+  final player = AudioPlayer();
+  EnvirormentProvider envirormentProvider = EnvirormentProvider();
+  late TabController _controller;
+  final scanStore = NormalScanStore();
+  final visibilityStore = VisibilityStore();
+  final infoCurrentPeopleBoxStore = InfoCurrentPeopleBoxStore();
+  VisitorsService visitorsService = VisitorsService();
+  HistoryService historyService = HistoryService();
+  static const MethodChannel methodChannel =
       MethodChannel('com.darryncampbell.datawedgeflutter/command');
   static const EventChannel scanChannel =
       EventChannel('com.darryncampbell.datawedgeflutter/scan');
@@ -42,13 +63,14 @@ class _ZebraScannerPageState extends State<ZebraScannerPage> {
     }
   }
 
-  String _barcodeString = "Barcode will be shown here";
-  String _barcodeSymbology = "Symbology will be shown here";
-  String _scanTime = "Scan Time will be shown here";
+  String _barcodeString = "";
+  String _barcodeSymbology = "";
+  String _scanTime = "";
 
   @override
   void initState() {
     super.initState();
+    _controller = TabController(length: 2, vsync: this);
     scanChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
     _createProfile("DataWedgeFlutterDemo");
   }
@@ -84,90 +106,70 @@ class _ZebraScannerPageState extends State<ZebraScannerPage> {
     });
   }
 
+  List<Widget> tabBarWidget() => [
+        Tab(text: 'Entrata'),
+        Tab(
+          text: 'Uscita',
+        )
+      ];
+
+  Future<int> getVisitors() {
+    Future<int> requestVisitors = visitorsService.requestVisitors(
+        widget.user.manifestationId.toString(),
+        widget.user.courseId!,
+        envirormentProvider.envirormentState);
+    return requestVisitors;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("DataWedge Flutter"),
-      ),
-      body: Container(
-          child: Row(children: [
-        Expanded(
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(32),
-                child: Row(
-                  children: [
-                    Expanded(
-                      /*1*/
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /*2*/
-                          Container(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              '$_barcodeString',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              '$_barcodeSymbology',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '$_scanTime',
-                            style: TextStyle(
-                              color: Colors.deepPurple,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                // When the child is tapped, show a snackbar.
-                onTapDown: (TapDownDetails) {
-                  //startScan();
-                  startScan();
-                },
-                onTapUp: (TapUpDetails) {
-                  stopScan();
-                },
-                // The custom button
-                child: Container(
-                    margin: EdgeInsets.all(8.0),
-                    padding: EdgeInsets.all(22.0),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "SCAN",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )),
-              ),
-            ],
-          ),
-        ),
-      ])),
-    );
+    final offlineMode = Provider.of<OfflineModeProvider>(context);
 
-     
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text("Zebra scanner"),
+            bottom: TabBar(
+                controller: _controller,
+                labelColor: Colors.black,
+                tabs: tabBarWidget(),
+                indicatorWeight: 6,
+                indicatorColor: ThemeHelper.primaryColor),
+          ),
+          body: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20,),
+                  const Text(
+                    'Usa i pulsanti a lato\noppure\nutilizza il bottone sottostante',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 50,),
+                  TextButton(onPressed: ()=> startScan(), child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: ThemeHelper.primaryColor),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                        Text('Scan!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                        SizedBox(width: 6,),
+                        Icon(CupertinoIcons.qrcode, color: Colors.white,)
+                      ],),
+                    ),
+                  ))
+                ],
+              ),
+            ),
+          )),
+    );
   }
-  
 }
