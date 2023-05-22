@@ -112,7 +112,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                     expositorMapperData.siglaprovincia!)
                 .name;
           }
-          if(expositorMapperData.valore != null){
+          if (expositorMapperData.valore != null) {
             star = double.parse(expositorMapperData.valore!);
           }
           selectedItemyStoreNation.setSelectedItem(selectedValue);
@@ -277,41 +277,50 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                             ),
                                           ),
                                         )),
-                                    GestureDetector(
-                                        onTap: () => showPickerProvince(),
-                                        child: Container(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 20,
-                                                top: 12,
-                                                bottom: 12,
-                                                right: 20),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  AppLocalizations.of(context)
-                                                      .province,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: CupertinoColors
-                                                          .systemGrey),
+                                    Observer(builder: (context) {
+                                      return selectedItemyStoreNation
+                                                  .selectedItem ==
+                                              "Italia"
+                                          ? GestureDetector(
+                                              onTap: () => showPickerProvince(),
+                                              child: Container(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 20,
+                                                      top: 12,
+                                                      bottom: 12,
+                                                      right: 20),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .province,
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                CupertinoColors
+                                                                    .systemGrey),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Observer(
+                                                          builder: ((context) =>
+                                                              Text(selectedItemyStoreProvince
+                                                                  .selectedItem!))),
+                                                      Spacer(),
+                                                      Icon(
+                                                        CupertinoIcons
+                                                            .chevron_down,
+                                                        //color: ThemeHelper.primaryColor,
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Observer(
-                                                    builder: ((context) => Text(
-                                                        selectedItemyStoreProvince
-                                                            .selectedItem!))),
-                                                Spacer(),
-                                                Icon(
-                                                  CupertinoIcons.chevron_down,
-                                                  //color: ThemeHelper.primaryColor,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        )),
+                                              ))
+                                          : Container();
+                                    })
                                   ],
                                 )
                               ],
@@ -439,8 +448,11 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                       textEditingControllerEmail.text,
                                       NationsUtils.getInitialsFromNation(
                                           selectedValue),
-                                      ProvinceUtils.getInitialsFromProvince(
-                                          selectedValueProvince),
+                                      selectedValueProvince != ""
+                                          ? ProvinceUtils
+                                              .getInitialsFromProvince(
+                                                  selectedValueProvince)
+                                          : "",
                                       textEditingControllerName.text,
                                       textEditingControllerSurname.text,
                                       textEditingControllerPhone.text,
@@ -548,6 +560,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
       String label, int lines, Color borderColor) {
     return TextField(
         minLines: lines,
+        style: TextStyle(color: borderColor),
         maxLines: lines,
         controller: textEditingController,
         decoration: InputDecoration(
