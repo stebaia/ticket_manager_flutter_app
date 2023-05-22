@@ -29,7 +29,6 @@ class CsvExporter {
     row.add("Sigla Provincia");
     row.add("Sigla Nazione");
     row.add("Privacy Commericiale");
-    row.add("Valore");
     row.add("Ragione Sociale");
     row.add("Note");
     rows.add(row);
@@ -43,7 +42,6 @@ class CsvExporter {
       row.add(expositors[i].siglaprovincia);
       row.add(expositors[i].siglanazione);
       row.add(expositors[i].privacyCommerciale);
-      row.add(expositors[i].valore);
       row.add(expositors[i].ragionesociale);
       row.add(expositors[i].note);
 
