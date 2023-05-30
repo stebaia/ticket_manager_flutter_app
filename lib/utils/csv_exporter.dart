@@ -50,26 +50,27 @@ class CsvExporter {
 
     String csv = const ListToCsvConverter().convert(rows);
 
-    if(Platform.isAndroid){
-    String dir = await ExternalPath.getExternalStoragePublicDirectory(
-        ExternalPath.DIRECTORY_DOWNLOADS);
-        print("dir $dir");
-    String file = "$dir";
+    if (Platform.isAndroid) {
+      String dir = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS);
+      print("dir $dir");
+      String file = "$dir";
 
-    File f = File(file + "/esportazione_espositori.csv");
+      File f = File(file + "/esportazione_espositori.csv");
 
-    f.writeAsString(csv);
+      f.writeAsString(csv);
 
-    shareFile(f.path);
-    }Directory documents = await getApplicationDocumentsDirectory();
-        
-    String file = documents.path;
+      shareFile(f.path);
+    } else {
+      Directory documents = await getApplicationDocumentsDirectory();
 
-    File f = File(file + "/esportazione_offline_scan.csv");
+      String file = documents.path;
 
-    f.writeAsString(csv);
+      File f = File(file + "/esportazione_offline_scan.csv");
 
-    shareFile(f.path);
-    
+      f.writeAsString(csv);
+
+      shareFile(f.path);
+    }
   }
 }

@@ -413,7 +413,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                       EdgeInsets.symmetric(horizontal: 4.0),
                                   itemBuilder: (context, _) => Icon(
                                     CupertinoIcons.star_fill,
-                                    color: Colors.orange,
+                                    color: Colors.green,
                                   ),
                                   onRatingUpdate: (rating) {
                                     print(rating);
@@ -432,7 +432,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                           child: MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18)),
-                            color: Colors.orange,
+                            color: Colors.green,
                             textColor: Colors.white,
                             height: 46,
                             minWidth: MediaQuery.of(context).size.width,
@@ -564,7 +564,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
         maxLines: lines,
         controller: textEditingController,
         decoration: InputDecoration(
-            labelStyle: TextStyle(color: Colors.orange),
+            labelStyle: TextStyle(color: Colors.green),
             enabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: borderColor)),
             border: OutlineInputBorder(),
