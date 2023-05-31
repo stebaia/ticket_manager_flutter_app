@@ -125,7 +125,11 @@ class _ExpositorListScreenState extends State<ExpositorsScreen> {
                                       int.parse(expositorList[index].idextra!),
                                 ),
                               ),
-                            )
+                            ).then((value) {
+                              setState(() {
+                                
+                              });
+                            })
                           },
                         ));
                   });

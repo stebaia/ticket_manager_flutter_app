@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:http/http.dart' as http;
 import 'package:ticket_manager_flutter_app/model/response_set_utente/response_set_utente.dart';
